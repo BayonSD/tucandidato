@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efecto Tarjetas de Candidatos</title>
+    <style>
+        /* --- Fuentes y Reseteo Básico --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* --- El Contenedor de las Tarjetas --- */
+        .card-container {
+            display: grid;
+            /* Crea columnas responsivas: 
+               - 1 columna en pantallas pequeñas.
+               - 2 columnas en medianas.
+               - 3 columnas en grandes.
+            */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem; /* Espacio entre tarjetas */
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* --- Estilo de CADA Tarjeta --- */
+        .card {
+            position: relative; /* Clave para el contenido superpuesto */
+            overflow: hidden;   /* Clave para que nada se "salga" */
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease-in-out;
+            height: 450px;
+        }
+
+        /* --- La Imagen del Candidato --- */
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Rellena el espacio sin deformar la imagen */
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* --- El Contenido (Nombre, Partido) --- */
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            
+            /* Un gradiente para que el texto sea legible sobre la foto */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+            
+            color: white;
+            
+            /* --- LA MAGIA --- */
+            /* 1. Mueve el contenido 100% hacia abajo (fuera de la tarjeta) */
+            transform: translateY(100%);
+            /* 2. Oculta el texto que se sale del gradiente */
+            opacity: 0; 
+            transition: all 0.4s ease-in-out;
+        }
+        
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .card-description {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* --- El EFECTO al pasar el mouse --- */
+        
+        .card:hover {
+            /* 1. Agranda la tarjeta ligeramente */
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .card:hover .card-image {
+            /* 2. Hace un ligero zoom a la imagen */
+            transform: scale(1.1);
+        }
+
+        .card:hover .card-content {
+            /* 3. Mueve el contenido a su posición original (visible) */
+            transform: translateY(0);
+            /* 4. Lo hace visible */
+            opacity: 1;
+        }
+
+        /* --- (Opcional) Efecto de "Foco" --- */
+        /* Cuando pasas el mouse sobre el CONTENEDOR... */
+        .card-container:hover > .card:not(:hover) {
+            /* ...todas las tarjetas MENOS la que tiene el mouse, se opacan */
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+
+        <div class="card">
+            <img src="https://picsum.photos/seed/candidato1/400/600" alt="Foto Candidato 1" class="card-image">
+            <div class="card-content">
+                <h3 class="card-title">Candidato A</h3>
+                <p class="card-description">Partido de la Innovación</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://picsum.photos/seed/candidato2/400/600" alt="Foto Candidato 2" class="card-image">
+            <div class="card-content">
+                <h3 class="card-title">Candidato B</h3>
+                <p class="card-description">Partido Social Verde</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://picsum.photos/seed/candidato3/400/600" alt="Foto Candidato 3" class="card-image">
+            <div class="card-content">
+                <h3 class="card-title">Candidato C</h3>
+                <p class="card-description">Movimiento Futuro</p>
+            </div>
+        </div>
+
+        </div>
+
+</body>
+</html>

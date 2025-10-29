@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Candidato | Voto Informado 2025</title>
+    
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carga de Lucide Icons (para los íconos) -->
+    <script src="https://unpkg.com/lucide@latest/dist/lucide.min.js"></script>
+
+    <style>
+        /* Usamos la fuente 'Inter' que es limpia y moderna */
+        body {
+            font-family: 'Inter', sans-serif;
+
+            /* ===== NUEVO FONDO DE CORDILLERA ===== */
+            /* Imagen de fondo de Unsplash (montañas genéricas nevadas) */
+            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80');
+            
+            /* Cubre todo el fondo */
+            background-size: cover;
+            
+            /* Centra la imagen */
+            background-position: center center;
+            
+            /* Fija la imagen para que el contenido se desplace sobre ella (efecto parallax) */
+            background-attachment: fixed;
+        }
+
+        /* Añadimos un sutil overlay a las tarjetas para que el texto sea más legible
+           sobre un fondo de imagen. 
+           Usamos 'backdrop-blur' para un efecto "vidrio esmerilado".
+        */
+        .content-card {
+             background-color: rgba(255, 255, 255, 0.95); /* Blanco con 95% opacidad */
+             backdrop-filter: blur(10px);
+             -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- ======================================= -->
+    <!--     BARRA DE NAVEGACIÓN Y LOGO        -->
+    <!-- ======================================= -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto max-w-5xl p-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-3" title="Inicio - Tu Candidato">
+                <!-- Icono SVG inspirado en Chile -->
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rounded-md">
+                    <rect width="24" height="24" fill="#1D4ED8"/> <!-- Tailwind blue-700 -->
+                    <path d="M12 2.5L14.6942 9.20124H21.8042L16.055 13.5975L18.7492 20.2988L12 15.9025L5.25078 20.2988L7.94501 13.5975L2.19579 9.20124H9.30582L12 2.5Z" fill="white"/>
+                </svg>
+                <!-- Texto del Logo -->
+                <span class="text-2xl font-extrabold text-gray-800 hidden sm:inline">Tu <span class="text-blue-700">Candidato</span></span>
+            </a>
+            
+            <!-- Menú de navegación -->
+            <div class="flex space-x-4 md:space-x-6">
+                <a href="#" class="text-gray-600 hover:text-blue-700 font-medium">Candidatos</a>
+                <a href="#" class="text-gray-600 hover:text-blue-700 font-medium">Comparador</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- ======================================= -->
+        <!--     SECCIÓN DE ENCABEZADO (HEADER)      -->
+        <!-- ======================================= -->
+        <!-- Añadimos la clase 'content-card' -->
+        <header class="content-card p-6 md:p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+            <!-- Foto del Candidato -->
+            <img 
+                src="https://placehold.co/150x150/E0E0E0/7F7F7F?text=Candidato" 
+                alt="Foto del Candidato"
+                class="w-36 h-36 md:w-40 md:h-40 object-cover rounded-full md:rounded-xl border-4 border-gray-200 shadow-md"
+            >
+            
+            <!-- Información Principal -->
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Nombre Apellido Candidato</h1>
+                <p class="text-xl font-semibold text-blue-700 mt-1">Partido Ejemplo (PE)</p>
+                <p class="text-lg text-gray-600 italic mt-2">"Un lema de campaña corto y conciso"</p>
+                
+                <!-- Redes Sociales -->
+                <div class="flex justify-center md:justify-start space-x-4 mt-4">
+                    <a href="#" class="text-gray-500 hover:text-blue-700" title="Twitter/X">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-blue-700" title="Facebook">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-blue-700" title="Instagram">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-blue-700" title="Sitio Web">
+                        <i data-lucide="globe" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- =========================================== -->
+        <!--    CONTENIDO PRINCIPAL (FORMATO SCROLL)     -->
+        <!-- =========================================== -->
+        <!-- Usamos 'space-y-8' para dar espacio entre cada sección/tarjeta -->
+        <main class="mt-8 space-y-8">
+
+            <!-- ===== SECCIÓN 1: Información Personal ===== -->
+            <!-- Añadimos la clase 'content-card' -->
+            <section id="informacion-personal" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-2xl font-bold mb-6 flex items-center text-gray-900">
+                    <i data-lucide="user" class="w-7 h-7 mr-3 text-blue-700"></i>
+                    Información Personal y Biografía
+                </h2>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-3 gap-4">
+                        <dt class="font-semibold text-gray-700">Nombre Completo:</dt>
+                        <dd class="col-span-2">Nombre Apellido Candidato</dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-t border-gray-200 pt-4">
+                        <dt class="font-semibold text-gray-700">Fecha de Nacimiento:</dt>
+                        <dd class="col-span-2">15 de marzo de 1970 (55 años)</dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-t border-gray-200 pt-4">
+                        <dt class="font-semibold text-gray-700">Lugar de Origen:</dt>
+                        <dd class="col-span-2">Santiago, Región Metropolitana</dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-t border-gray-200 pt-4">
+                        <dt class="font-semibold text-gray-700">Educación:</dt>
+                        <dd class="col-span-2">
+                            <ul class="list-disc list-inside">
+                                <li>Maestría en Administración Pública (Universidad de Chile)</li>
+                                <li>Licenciatura en Economía (Pontificia Universidad Católica)</li>
+                            </ul>
+                        </dd>
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mt-8 mb-4">Biografía</h3>
+                <div class="prose max-w-none text-gray-700 space-y-4">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </section>
+
+            <!-- ===== SECCIÓN 2: CV / Trayectoria ===== -->
+            <!-- Añadimos la clase 'content-card' -->
+            <section id="cv" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-2xl font-bold mb-6 flex items-center text-gray-900">
+                    <i data-lucide="briefcase" class="w-7 h-7 mr-3 text-blue-700"></i>
+                    Trayectoria y Experiencia (CV)
+                </h2>
+                
+                <!-- Componente de Línea de Tiempo (Timeline) -->
+                <div class="relative border-l-2 border-blue-200 pl-8 space-y-10">
+                    <!-- Item 1 -->
+                    <div class="relative">
+                        <div class="absolute w-5 h-5 bg-blue-700 rounded-full -left-[43px] border-4 border-white"></div>
+                        <span class="text-sm font-medium text-gray-600">2018 - 2024</span>
+                        <h4 class="text-lg font-semibold mt-1">Senador por la Región Metropolitana</h4>
+                        <p class="text-gray-700 mt-1">Miembro de la comisión de Hacienda y Economía. Impulsor de la ley de transparencia fiscal.</p>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="relative">
+                        <div class="absolute w-5 h-5 bg-blue-700 rounded-full -left-[43px] border-4 border-white"></div>
+                        <span class="text-sm font-medium text-gray-600">2014 - 2018</span>
+                        <h4 class="text-lg font-semibold mt-1">Ministro de Obras Públicas</h4>
+                        <p class="text-gray-700 mt-1">Lideró el plan nacional de infraestructura y conectividad digital.</p>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="relative">
+                        <div class="absolute w-5 h-5 bg-blue-700 rounded-full -left-[43px] border-4 border-white"></div>
+                        <span class="text-sm font-medium text-gray-600">2005 - 2014</span>
+                        <h4 class="text-lg font-semibold mt-1">Fundador y CEO de "Empresa Tech"</h4>
+                        <p class="text-gray-700 mt-1">Creó una startup de tecnología cívica enfocada en la participación ciudadana.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECCIÓN 3: Propuestas ===== -->
+            <!-- Añadimos la clase 'content-card' -->
+            <section id="propuestas" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <h2 class="text-2xl font-bold flex items-center text-gray-900 mb-4 md:mb-0">
+                        <i data-lucide="landmark" class="w-7 h-7 mr-3 text-blue-700"></i>
+                        Propuesta de Gobierno
+                    </h2>
+                    <a href="#" class="bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition duration-300 flex-shrink-0">
+                        <i data-lucide="download" class="inline-block w-4 h-4 mr-1"></i>
+                        Descargar Plan (PDF)
+                    </a>
+                </div>
+                
+                <!-- Cuadrícula de Temas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Tarjeta de Tema: Economía -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-blue-700"></i>
+                            <h4 class="text-xl font-semibold">Economía y Empleo</h4>
+                        </div>
+                        <p class="text-gray-700 mb-4">Foco en la reactivación de las PYMEs y la creación de empleos en sectores tecnológicos.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>Incentivos fiscales para nuevas contrataciones.</li>
+                            <li>Fondo de capital de riesgo para startups.</li>
+                            <li>Reducción de burocracia para abrir negocios.</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tarjeta de Tema: Seguridad -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <i data-lucide="shield" class="w-6 h-6 text-blue-700"></i>
+                            <h4 class="text-xl font-semibold">Seguridad Pública</h4>
+                        </div>
+                        <p class="text-gray-700 mb-4">Modernización de las policías y estrategia de recuperación de barrios.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>Aumento de dotación policial en zonas críticas.</li>
+                            <li>Inversión en cámaras y tecnología de vigilancia.</li>
+                            <li>Programas de reinserción social.</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tarjeta de Tema: Salud -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <i data-lucide="heart-pulse" class="w-6 h-6 text-blue-700"></i>
+                            <h4 class="text-xl font-semibold">Salud</h4>
+                        </div>
+                        <p class="text-gray-700 mb-4">Reducción de listas de espera y fortalecimiento de la atención primaria.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>Creación de 20 nuevos Centros de Salud Familiar.</li>
+                            <li>Implementación de ficha médica digital única.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tarjeta de Tema: Educación -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <i data-lucide="graduation-cap" class="w-6 h-6 text-blue-700"></i>
+                            <h4 class="text-xl font-semibold">Educación</h4>
+                        </div>
+                        <p class="text-gray-700 mb-4">Mejora de la calidad en la educación pública y acceso a la educación superior.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>Plan de conectividad a internet para todas las escuelas.</li>
+                            <li>Aumento de becas de mérito y necesidad.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECCIÓN 4: Noticias ===== -->
+            <!-- Añadimos la clase 'content-card' -->
+            <section id="noticias" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-2xl font-bold mb-6 flex items-center text-gray-900">
+                    <i data-lucide="newspaper" class="w-7 h-7 mr-3 text-blue-700"></i>
+                    Noticias Relevantes
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- Tarjeta de Noticia 1 -->
+                    <article class="flex flex-col md:flex-row bg-white p-4 rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <img src="https://placehold.co/200x120/EEE/AAA?text=Noticia" alt="Imagen de la noticia" class="w-full md:w-48 h-32 md:h-auto object-cover rounded-md">
+                        <div class="md:ml-5 mt-4 md:mt-0">
+                            <span class="text-sm text-gray-500">Fuente: Diario La Tercera | 28 de octubre, 2025</span>
+                            <a href="#" class="block text-xl font-semibold text-gray-900 hover:text-blue-700 mt-1">
+                                Candidato presenta su plan de reactivación económica en cumbre de PYMEs
+                            </a>
+                            <p class="text-gray-700 mt-2 line-clamp-2">El candidato detalló sus propuestas de incentivos fiscales y reducción de burocracia ante más de 500 empresarios...</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Tarjeta de Noticia 2 -->
+                    <article class="flex flex-col md:flex-row bg-white p-4 rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <img src="https://placehold.co/200x120/EEE/AAA?text=Noticia" alt="Imagen de la noticia" class="w-full md:w-48 h-32 md:h-auto object-cover rounded-md">
+                        <div class="md:ml-5 mt-4 md:mt-0">
+                            <span class="text-sm text-gray-500">Fuente: El Mercurio | 27 de octubre, 2025</span>
+                            <a href="#" class="block text-xl font-semibold text-gray-900 hover:text-blue-700 mt-1">
+                                Debate sobre seguridad: Las propuestas de Nombre Candidato
+                            </a>
+                            <p class="text-gray-700 mt-2 line-clamp-2">Durante el debate presidencial, el candidato del Partido Ejemplo enfatizó la necesidad de modernizar las policías...</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pb-8">
+            <p>Este es un sitio web independiente y no afiliado a ningún partido político.</p>
+            <p>&copy; 2025 Voto Informado Chile. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- ======================================= -->
+    <!--     SCRIPT DE JAVASCRIPT (SOLO ICONOS)  -->
+    <!-- ======================================= -->
+    <script>
+        // Activar los íconos de Lucide
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>
+
+
+
