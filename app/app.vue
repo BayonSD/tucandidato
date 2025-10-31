@@ -1,54 +1,44 @@
 <template>
-  <div class="card-container">
-    <div
-      class="card"
-      v-for="candidato in candidatos"
-      :key="candidato.id"
-      @click="irAPresidente(candidato.id)"
-    >
-      <img :src="candidato.foto" :alt="'Foto ' + candidato.nombre" class="card-image" />
-      <div class="card-content">
-        <h3 class="card-title">{{ candidato.nombre }}</h3>
-        <p class="card-description">{{ candidato.partido }}</p>
+  <section class="presidenciales">
+    <h2>Candidatos Presidenciales</h2>
+    <div class="card-container">
+      <div
+        class="card"
+        v-for="candidato in presidenciales"
+        :key="candidato._id"
+        @click="irAPresidente(candidato._id)"
+      >
+        <img :src="candidato.fotoUrl || defaultFoto" :alt="'Foto ' + candidato.nombre_completo" class="card-image" />
+        <div class="card-content">
+          <h3 class="card-title">{{ candidato.nombre_completo }}</h3>
+          <p class="card-description">{{ candidato.lista_nomina }}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
-<script>
-export default {
-  name: "PresidenteSelector",
-  data() {
-    return {
-      candidatos: [
-        {
-          id: 1,
-          nombre: "Candidato A",
-          partido: "Partido de la Innovación",
-          foto: "https://picsum.photos/seed/candidato1/400/600",
-        },
-        {
-          id: 2,
-          nombre: "Candidato B",
-          partido: "Partido Social Verde",
-          foto: "https://picsum.photos/seed/candidato2/400/600",
-        },
-        {
-          id: 3,
-          nombre: "Candidato C",
-          partido: "Movimiento Futuro",
-          foto: "https://picsum.photos/seed/candidato3/400/600",
-        },
-      ],
-    };
-  },
-  methods: {
-    irAPresidente(id) {
-      // Reemplaza esto por tu lógica de navegación (por ejemplo, Vue Router)
-      this.$router.push({ name: "PresidenteInfo", params: { id } });
-    },
-  },
-};
+<script setup>
+import { ref, computed } from 'vue'
+
+const candidatos = ref([])
+const defaultFoto = 'https://picsum.photos/seed/presidente/400/600'
+
+const fetchCandidatos = async () => {
+  const res = await fetch('/api/candidatos')
+  candidatos.value = await res.json()
+}
+
+const presidenciales = computed(() =>
+  candidatos.value.filter(c => c.tipo_eleccion === 'PRESIDENTE')
+)
+
+const irAPresidente = (id) => {
+  // Reemplaza por tu lógica de navegación
+  // Ejemplo: navigateTo(`/presidente/${id}`)
+}
+
+fetchCandidatos()
 </script>
 
 <style scoped>
@@ -59,14 +49,24 @@ body {
   background-color: #f0f2f5;
 }
 
+.presidenciales {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.presidenciales h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 0;
 }
 
 .card {
