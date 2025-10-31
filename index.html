@@ -3,144 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Efecto Tarjetas de Candidatos</title>
+    <title>Tu Candidato | Elecciones Chile 2025</title>
+    
+    <!-- Carga de Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carga de Lucide Icons (para los íconos) --><script src="https://unpkg.com/lucide@latest/dist/lucide.min.js"></script>
+
     <style>
-        /* --- Fuentes y Reseteo Básico --- */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
+        /* Usamos la fuente 'Inter' que es limpia y moderna */
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 2rem;
-        }
+            font-family: 'Inter', sans-serif;
 
-        /* --- El Contenedor de las Tarjetas --- */
-        .card-container {
-            display: grid;
-            /* Crea columnas responsivas: 
-               - 1 columna en pantallas pequeñas.
-               - 2 columnas en medianas.
-               - 3 columnas en grandes.
-            */
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem; /* Espacio entre tarjetas */
-            width: 100%;
-            max-width: 1100px;
-        }
-
-        /* --- Estilo de CADA Tarjeta --- */
-        .card {
-            position: relative; /* Clave para el contenido superpuesto */
-            overflow: hidden;   /* Clave para que nada se "salga" */
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease-in-out;
-            height: 450px;
-        }
-
-        /* --- La Imagen del Candidato --- */
-        .card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Rellena el espacio sin deformar la imagen */
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* --- El Contenido (Nombre, Partido) --- */
-        .card-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 1.5rem;
+            /* Imagen de fondo de Unsplash (montañas genéricas nevadas) */
+            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80');
             
-            /* Un gradiente para que el texto sea legible sobre la foto */
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+            /* Cubre todo el fondo */
+            background-size: cover;
             
-            color: white;
+            /* Centra la imagen */
+            background-position: center center;
             
-            /* --- LA MAGIA --- */
-            /* 1. Mueve el contenido 100% hacia abajo (fuera de la tarjeta) */
-            transform: translateY(100%);
-            /* 2. Oculta el texto que se sale del gradiente */
-            opacity: 0; 
-            transition: all 0.4s ease-in-out;
-        }
-        
-        .card-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .card-description {
-            font-size: 1rem;
-            margin: 0;
+            /* Fija la imagen para que el contenido se desplace sobre ella (efecto parallax) */
+            background-attachment: fixed;
         }
 
-        /* --- El EFECTO al pasar el mouse --- */
-        
-        .card:hover {
-            /* 1. Agranda la tarjeta ligeramente */
-            transform: scale(1.05);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        /* Clase reutilizable para las tarjetas de contenido con efecto "vidrio esmerilado" */
+        .content-card {
+             background-color: rgba(255, 255, 255, 0.95); /* Blanco con 95% opacidad */
+             backdrop-filter: blur(10px);
+             -webkit-backdrop-filter: blur(10px);
         }
 
-        .card:hover .card-image {
-            /* 2. Hace un ligero zoom a la imagen */
-            transform: scale(1.1);
+        /* Estilo para la rotación del ícono del acordeón */
+        .accordion-button[aria-expanded="true"] .accordion-icon {
+            transform: rotate(180deg);
         }
 
-        .card:hover .card-content {
-            /* 3. Mueve el contenido a su posición original (visible) */
-            transform: translateY(0);
-            /* 4. Lo hace visible */
-            opacity: 1;
+        /* Estilo para el contenedor de la sección de candidatos para permitir scroll horizontal */
+        .candidates-scroll-container {
+            display: flex; /* Permite que los elementos se alineen horizontalmente */
+            gap: 1rem; /* Espacio entre los candidatos */
+            overflow-x: auto; /* Permite el scroll horizontal */
+            padding-bottom: 1rem; /* Espacio para la barra de scroll */
+            -webkit-overflow-scrolling: touch; /* Scroll más suave en iOS */
+            scroll-snap-type: x mandatory; /* Para que se "ajuste" a cada candidato al scrollear */
         }
 
-        /* --- (Opcional) Efecto de "Foco" --- */
-        /* Cuando pasas el mouse sobre el CONTENEDOR... */
-        .card-container:hover > .card:not(:hover) {
-            /* ...todas las tarjetas MENOS la que tiene el mouse, se opacan */
-            opacity: 0.6;
-            transform: scale(0.95);
+        /* Estilo individual de cada tarjeta de candidato */
+        .candidate-card-horizontal {
+            flex: 0 0 auto; /* No se encoge, no crece, tamaño automático */
+            width: 70vw; /* Ocupa el 70% del ancho del viewport en móvil */
+            max-width: 300px; /* Ancho máximo para pantallas más grandes */
+            height: 450px; /* Altura fija para que todas sean iguales */
+            position: relative;
+            background-color: #fff; /* Fondo blanco por defecto si la imagen no carga */
+            border-radius: 0.75rem; /* rounded-lg */
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            scroll-snap-align: center; /* Se ajusta al centro al scrollear */
+            transition: transform 0.3s ease-in-out; /* Transición para efectos hover/focus */
         }
 
+        .candidate-card-horizontal:hover {
+            transform: translateY(-5px); /* Pequeño efecto de elevación al pasar el mouse */
+        }
+
+        /* Degradado en la parte inferior para que el texto resalte */
+        .candidate-info-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900">
 
-    <div class="card-container">
-
-        <div class="card">
-            <img src="https://picsum.photos/seed/candidato1/400/600" alt="Foto Candidato 1" class="card-image">
-            <div class="card-content">
-                <h3 class="card-title">Candidato A</h3>
-                <p class="card-description">Partido de la Innovación</p>
+    <!-- ======================================= --><!--     BARRA DE NAVEGACIÓN Y LOGO        --><!-- ======================================= --><nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto max-w-5xl p-4 flex justify-between items-center">
+            <!-- Logo --><a href="/" class="flex items-center space-x-3" title="Inicio - Tu Candidato">
+                <!-- Icono SVG inspirado en Chile --><svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rounded-md">
+                    <rect width="24" height="24" fill="#1D4ED8"/> <!-- Tailwind blue-700 --><path d="M12 2.5L14.6942 9.20124H21.8042L16.055 13.5975L18.7492 20.2988L12 15.9025L5.25078 20.2988L7.94501 13.5975L2.19579 9.20124H9.30582L12 2.5Z" fill="white"/>
+                </svg>
+                <!-- Texto del Logo --><span class="text-2xl font-extrabold text-gray-800 hidden sm:inline">Tu <span class="text-blue-700">Candidato</span></span>
+            </a>
+            
+            <!-- Menú de navegación (ahora apunta a secciones de la página) --><div class="flex space-x-4 md:space-x-6">
+                <a href="#candidatos" class="text-gray-600 hover:text-blue-700 font-medium">Candidatos</a>
+                <a href="#encuestas" class="text-gray-600 hover:text-blue-700 font-medium">Encuestas</a>
+                <a href="#faq" class="text-gray-600 hover:text-blue-700 font-medium">Preguntas</a>
             </div>
         </div>
+    </nav>
 
-        <div class="card">
-            <img src="https://picsum.photos/seed/candidato2/400/600" alt="Foto Candidato 2" class="card-image">
-            <div class="card-content">
-                <h3 class="card-title">Candidato B</h3>
-                <p class="card-description">Partido Social Verde</p>
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- ======================================= --><!--     SECCIÓN 1: HERO Y CUENTA REGRESIVA  --><!-- ======================================= --><header class="content-card text-center p-8 md:p-12 rounded-xl shadow-lg">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Elecciones Presidenciales 2025</h1>
+            <p class="text-xl md:text-2xl text-blue-700 font-medium mt-3">Faltan:</p>
+            
+            <!-- Contenedor de la Cuenta Regresiva --><div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6 mt-8">
+                <!-- Días --><div class="bg-gray-100 p-4 rounded-lg shadow-inner w-full md:w-32">
+                    <span id="countdown-days" class="text-4xl font-bold text-blue-700">--</span>
+                    <span class="block text-sm text-gray-600">Días</span>
+                </div>
+                <!-- Horas --><div class="bg-gray-100 p-4 rounded-lg shadow-inner w-full md:w-32">
+                    <span id="countdown-hours" class="text-4xl font-bold text-blue-700">--</span>
+                    <span class="block text-sm text-gray-600">Horas</span>
+                </div>
+                <!-- Minutos --><div class="bg-gray-100 p-4 rounded-lg shadow-inner w-full md:w-32">
+                    <span id="countdown-minutes" class="text-4xl font-bold text-blue-700">--</span>
+                    <span class="block text-sm text-gray-600">Minutos</span>
+                </div>
+                <!-- Segundos --><div class="bg-gray-100 p-4 rounded-lg shadow-inner w-full md:w-32">
+                    <span id="countdown-seconds" class="text-4xl font-bold text-blue-700">--</span>
+                    <span class="block text-sm text-gray-600">Segundos</span>
+                </div>
             </div>
-        </div>
+        </header>
 
-        <div class="card">
-            <img src="https://picsum.photos/seed/candidato3/400/600" alt="Foto Candidato 3" class="card-image">
-            <div class="card-content">
-                <h3 class="card-title">Candidato C</h3>
-                <p class="card-description">Movimiento Futuro</p>
+        <!-- =========================================== --><!--    CONTENIDO PRINCIPAL (FORMATO SCROLL)     --><!-- =========================================== --><main class="mt-8 space-y-8">
+
+            <!-- ===== SECCIÓN 2: CANDIDATOS (NUEVO ESTILO DE CARRUSEL) ===== --><section id="candidatos" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-3xl font-bold mb-6 text-gray-900 text-center md:text-left">
+                    Conoce a los Candidatos
+                </h2>
+                
+                <!-- Contenedor para el scroll horizontal de candidatos --><div class="candidates-scroll-container">
+                    
+                    <!-- Candidato 1 --><a href="perfil-candidato.html" class="candidate-card-horizontal">
+                        <img 
+                            src="https://placehold.co/300x450/0000FF/FFFFFF?text=Candidato%201" 
+                            alt="Foto Candidato 1" 
+                            class="absolute inset-0 w-full h-full object-cover"
+                        >
+                        <div class="absolute inset-x-0 bottom-0 p-4 candidate-info-gradient text-white">
+                            <h3 class="text-2xl font-bold">Nombre Candidato 1</h3>
+                            <p class="text-lg font-medium text-blue-200">Partido Ejemplo (PE)</p>
+                            <button class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition duration-300">
+                                Ver Perfil
+                            </button>
+                        </div>
+                    </a>
+
+                    <!-- Candidato 2 --><a href="perfil-candidato.html" class="candidate-card-horizontal">
+                        <img 
+                            src="https://placehold.co/300x450/FF0000/FFFFFF?text=Candidato%202" 
+                            alt="Foto Candidato 2" 
+                            class="absolute inset-0 w-full h-full object-cover"
+                        >
+                        <div class="absolute inset-x-0 bottom-0 p-4 candidate-info-gradient text-white">
+                            <h3 class="text-2xl font-bold">Nombre Candidato 2</h3>
+                            <p class="text-lg font-medium text-red-200">Partido Alternativo (PA)</p>
+                            <button class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition duration-300">
+                                Ver Perfil
+                            </button>
+                        </div>
+                    </a>
+                    
+                    <!-- Candidato 3 --><a href="perfil-candidato.html" class="candidate-card-horizontal">
+                        <img 
+                            src="https://placehold.co/300x450/808080/FFFFFF?text=Candidato%203" 
+                            alt="Foto Candidato 3" 
+                            class="absolute inset-0 w-full h-full object-cover"
+                        >
+                        <div class="absolute inset-x-0 bottom-0 p-4 candidate-info-gradient text-white">
+                            <h3 class="text-2xl font-bold">Nombre Candidato 3</h3>
+                            <p class="text-lg font-medium text-gray-200">Independiente (IND)</p>
+                            <button class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition duration-300">
+                                Ver Perfil
+                            </button>
+                        </div>
+                    </a>
+
+                    <!-- Puedes añadir más candidatos aquí --><a href="perfil-candidato.html" class="candidate-card-horizontal">
+                        <img 
+                            src="https://placehold.co/300x450/008000/FFFFFF?text=Candidato%204" 
+                            alt="Foto Candidato 4" 
+                            class="absolute inset-0 w-full h-full object-cover"
+                        >
+                        <div class="absolute inset-x-0 bottom-0 p-4 candidate-info-gradient text-white">
+                            <h3 class="text-2xl font-bold">Nombre Candidato 4</h3>
+                            <p class="text-lg font-medium text-green-200">Partido Verde (PV)</p>
+                            <button class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition duration-300">
+                                Ver Perfil
+                            </button>
+                        </div>
+                    </a>
+                    
+                </div>
+            </section>
+
+            <!-- ===== SECCIÓN 3: ENCUESTAS CADEM ===== --><section id="encuestas" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-3xl font-bold mb-6 text-gray-900">Encuestas</h2>
+                <div class="space-y-5">
+                    
+                    <!-- Barra de Encuesta 1 --><div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-medium text-gray-800">Candidato 1 (PE)</span>
+                            <span class="text-lg font-medium text-blue-700">28%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-blue-700 h-4 rounded-full" style="width: 28%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Encuesta 2 --><div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-medium text-gray-800">Candidato 2 (PA)</span>
+                            <span class="text-lg font-medium text-red-600">22%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-red-600 h-4 rounded-full" style="width: 22%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Barra de Encuesta 3 --><div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-medium text-gray-800">Candidato 3 (IND)</span>
+                            <span class="text-lg font-medium text-gray-600">15%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-gray-500 h-4 rounded-full" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Barra de Encuesta 4 --><div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-medium text-gray-800">No Sabe / No Responde</span>
+                            <span class="text-lg font-medium text-gray-500">35%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4">
+                            <div class="bg-gray-300 h-4 rounded-full" style="width: 35%"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <p class="text-right text-sm text-gray-500 mt-4 italic">Fuente: Encuesta Plaza Pública CADEM (Semana 43).</p>
+            </section>
+
+            <!-- ===== SECCIÓN 4: PREGUNTAS FRECUENTES (FAQ) ===== --><section id="faq" class="content-card p-6 md:p-8 rounded-lg shadow-md scroll-mt-20">
+                <h2 class="text-3xl font-bold mb-6 text-gray-900">Preguntas Frecuentes</h2>
+                
+                <div class="space-y-4" id="accordion-container">
+                    
+                    <!-- Pregunta 1 --><div class="border-b border-gray-200 pb-4">
+                        <h2>
+                            <button type="button" class="accordion-button flex justify-between items-center w-full text-left text-xl font-semibold text-gray-800 hover:text-blue-700" aria-expanded="false">
+                                <span>¿Cuándo son las elecciones?</span>
+                                <i data-lucide="chevron-down" class="accordion-icon w-6 h-6 transition-transform duration-300"></i>
+                            </button>
+                        </h2>
+                        <div class="accordion-content hidden mt-4 text-gray-700 prose max-w-none">
+                            <p>La próxima elección presidencial de Chile está programada para el **domingo 21 de noviembre de 2025**. Si ningún candidato obtiene la mayoría absoluta (más del 50% de los votos), se realizará una segunda vuelta (balotaje) el domingo 19 de diciembre de 2025.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 --><div class="border-b border-gray-200 pb-4">
+                        <h2>
+                            <button type="button" class="accordion-button flex justify-between items-center w-full text-left text-xl font-semibold text-gray-800 hover:text-blue-700" aria-expanded="false">
+                                <span>¿Qué necesito para votar?</span>
+                                <i data-lucide="chevron-down" class="accordion-icon w-6 h-6 transition-transform duration-300"></i>
+                            </button>
+                        </h2>
+                        <div class="accordion-content hidden mt-4 text-gray-700 prose max-w-none">
+                            <p>Para votar, solo necesitas tu **Cédula de Identidad (Carnet)** o **Pasaporte**, los cuales pueden estar vencidos hasta 12 meses antes del día de la elección. No se acepta ningún otro documento (ej. licencia de conducir, comprobante de carnet en trámite).</p>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 --><div class="border-b border-gray-200 pb-4">
+                        <h2>
+                            <button type="button" class="accordion-button flex justify-between items-center w-full text-left text-xl font-semibold text-gray-800 hover:text-blue-700" aria-expanded="false">
+                                <span>¿Dónde me toca votar?</span>
+                                <i data-lucide="chevron-down" class="accordion-icon w-6 h-6 transition-transform duration-300"></i>
+                            </button>
+                        </h2>
+                        <div class="accordion-content hidden mt-4 text-gray-700 prose max-w-none">
+                            <p>Puedes consultar tu local de votación y si has sido designado vocal de mesa en el sitio web oficial del SERVEL (Servicio Electoral de Chile), generalmente un mes antes de la elección. El voto es obligatorio para todos los habilitados para sufragar.</p>
+                            <a href="https://consulta.servel.cl/" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline">Consultar en SERVEL</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center text-white text-sm mt-12 pb-8">
+            <div class="bg-black bg-opacity-30 p-4 rounded-lg inline-block">
+                <p>Este es un sitio web independiente y no afiliado a ningún partido político.</p>
+                <p>&copy; 2025 Tu Candidato. Todos los derechos reservados.</p>
             </div>
-        </div>
+        </footer>
+    </div>
 
-        </div>
+    <!-- ======================================= --><!--     SCRIPT DE JAVASCRIPT              --><!-- ======================================= --><script>
+        // 1. Activar los íconos de Lucide
+        lucide.createIcons();
+
+        // 2. Lógica de la Cuenta Regresiva
+        function startCountdown() {
+            // Fecha de la elección (Ejemplo: 21 de Noviembre de 2025)
+            // NOTA: Los meses en JS van de 0 a 11 (Noviembre = 10)
+            const electionDate = new Date(2025, 10, 21, 8, 0, 0).getTime();
+
+            const countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = electionDate - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("countdown-days").innerText = "00";
+                    document.getElementById("countdown-hours").innerText = "00";
+                    document.getElementById("countdown-minutes").innerText = "00";
+                    document.getElementById("countdown-seconds").innerText = "00";
+                    return;
+                }
+
+                // Cálculos de tiempo
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Función para añadir un cero si es menor de 10
+                const pad = (num) => (num < 10 ? "0" + num : num);
+
+                // Mostrar en el HTML
+                document.getElementById("countdown-days").innerText = pad(days);
+                document.getElementById("countdown-hours").innerText = pad(hours);
+                document.getElementById("countdown-minutes").innerText = pad(minutes);
+                document.getElementById("countdown-seconds").innerText = pad(seconds);
+
+            }, 1000);
+        }
+
+        // 3. Lógica del Acordeón (FAQ)
+        function setupAccordion() {
+            const accordionContainer = document.getElementById("accordion-container");
+            if (!accordionContainer) return;
+
+            const buttons = accordionContainer.querySelectorAll(".accordion-button");
+
+            buttons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const content = button.parentElement.nextElementSibling;
+                    const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+                    // Opcional: Cerrar todos los demás
+                    // buttons.forEach(b => {
+                    //     b.setAttribute("aria-expanded", "false");
+                    //     b.parentElement.nextElementSibling.classList.add("hidden");
+                    // });
+
+                    if (isExpanded) {
+                        button.setAttribute("aria-expanded", "false");
+                        content.classList.add("hidden");
+                    } else {
+                        button.setAttribute("aria-expanded", "true");
+                        content.classList.remove("hidden");
+                    }
+                });
+            });
+        }
+        
+        // Iniciar los scripts cuando el DOM esté cargado
+        document.addEventListener("DOMContentLoaded", () => {
+            startCountdown();
+            setupAccordion();
+        });
+
+    </script>
 
 </body>
 </html>
+
