@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+
+import mongoose from 'mongoose'
 
 const candidatoSchema = new mongoose.Schema({
   nombre_completo: { type: String, required: true },
@@ -11,6 +12,6 @@ const candidatoSchema = new mongoose.Schema({
   lista_nomina: { type: String },
   independiente_asociado: { type: String, default: null },
   partido_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Partido', required: true },
-}, { timestamps: true });
+}, { timestamps: true })
 
-module.exports = mongoose.model('Candidato', candidatoSchema);
+export default mongoose.model('Candidato', candidatoSchema)
