@@ -55,12 +55,13 @@
             >
               <img
                 :src="candidato.fotoUrl || defaultFoto"
-                :alt="'Foto ' + candidato.nombre_completo"
+                :alt="'Foto ' + candidato.Nombre + ' ' + candidato['Primer  Apellido'] + ' ' + candidato['Segundo  Apellido']"
                 class="candidate-img"
               />
               <div class="candidate-info-gradient">
-                <h3>{{ candidato.nombre_completo }}</h3>
-                <p class="candidate-partido">{{ candidato.lista_nomina }}</p>
+                <h3>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h3>
+                <p class="candidate-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
+                <p class="candidate-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] }}</p>
                 <button class="candidate-btn" @click="irAPresidente(candidato._id)">Ver Perfil</button>
               </div>
             </div>
@@ -156,7 +157,7 @@ const fetchCandidatos = async () => {
 }
 
 const presidenciales = computed(() =>
-  candidatos.value.filter(c => c.tipo_eleccion === 'PRESIDENTE')
+  candidatos.value.filter(c => c["Tipo  Eleccion"] === "PRESIDENTE")
 )
 
 const irAPresidente = (id) => {
