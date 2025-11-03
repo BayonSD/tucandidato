@@ -62,7 +62,7 @@
                 <h3>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h3>
                 <p class="candidate-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
                 <p class="candidate-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] }}</p>
-                <button class="candidate-btn" @click="irAPresidente(candidato._id)">Ver Perfil</button>
+                <a :href="`/candidato/${candidato._id}`" class="candidate-btn">Ver Perfil</a>
               </div>
             </div>
           </div>
@@ -146,8 +146,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { navigateTo } from '#imports'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const candidatos = ref([])
 const defaultFoto = 'https://picsum.photos/seed/presidente/400/600'
 
@@ -162,7 +163,7 @@ const presidenciales = computed(() =>
 
 const irAPresidente = (id) => {
   console.log('Navegando a candidato:', id)
-  navigateTo(`/candidato/${id}`)
+  router.push(`/candidato/${id}`)
 }
 
 onMounted(() => {
@@ -429,6 +430,8 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .candidate-btn:hover {

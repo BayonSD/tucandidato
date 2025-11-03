@@ -4,65 +4,43 @@
       <h2>No se encontró el candidato</h2>
       <p>Verifica el enlace o vuelve a la página de candidatos.</p>
     </div>
-    <!-- Sección principal: datos desde MongoDB -->
-    <header class="content-card perfil-header">
-      <img
-        :src="candidato.fotoUrl || defaultFoto"
-        alt="Foto del Candidato"
-        class="perfil-foto"
-      >
-      <div class="perfil-info">
-        <h1>{{ candidato.nombre_completo }}</h1>
-        <p class="perfil-partido">{{ candidato.lista_nomina }}</p>
-        <p class="perfil-lema" v-if="candidato.lema">"{{ candidato.lema }}"</p>
-        <div class="perfil-redes">
-          <a v-if="candidato.twitter" :href="candidato.twitter" target="_blank" title="Twitter">
-            <svg><!-- icono Twitter --></svg>
-          </a>
-          <a v-if="candidato.facebook" :href="candidato.facebook" target="_blank" title="Facebook">
-            <svg><!-- icono Facebook --></svg>
-          </a>
-          <a v-if="candidato.instagram" :href="candidato.instagram" target="_blank" title="Instagram">
-            <svg><!-- icono Instagram --></svg>
-          </a>
-          <a v-if="candidato.web" :href="candidato.web" target="_blank" title="Sitio Web">
-            <svg><!-- icono Web --></svg>
-          </a>
+    
+    <div v-else-if="candidato && candidato._id">
+      <!-- Sección principal: datos desde MongoDB -->
+      <header class="content-card perfil-header">
+        <img
+          :src="candidato.fotoUrl || defaultFoto"
+          alt="Foto del Candidato"
+          class="perfil-foto"
+        >
+        <div class="perfil-info">
+          <h1>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h1>
+          <p class="perfil-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
+          <p class="perfil-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] || 'Sin partido' }}</p>
+          <p class="perfil-info-extra"><strong>Sexo:</strong> {{ candidato.Sexo === 'H' ? 'Hombre' : 'Mujer' }}</p>
+          <p class="perfil-info-extra"><strong>Rango de edad:</strong> {{ candidato.Rango }}</p>
+          <p class="perfil-info-extra"><strong>Región:</strong> {{ candidato['Región'] }}</p>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <!-- Secciones manuales (solo presidentes) -->
-    <main>
-      <section class="content-card perfil-biografia">
-        <h2>Biografía</h2>
-        <p>{{ candidato.biografia }}</p>
-      </section>
-
-      <section class="content-card perfil-cv">
-        <h2>Trayectoria y Experiencia</h2>
-        <!-- Aquí puedes mostrar candidato.cv o un timeline manual -->
-      </section>
-
-      <section class="content-card perfil-propuestas">
-        <h2>Propuestas de Gobierno</h2>
-        <ul>
-          <li v-for="(propuesta, i) in candidato.propuestas" :key="i">{{ propuesta }}</li>
-        </ul>
-      </section>
-
-      <section class="content-card perfil-noticias">
-        <h2>Noticias Relevantes</h2>
-        <ul>
-          <li v-for="(noticia, i) in candidato.noticias" :key="i">{{ noticia }}</li>
-        </ul>
-      </section>
-    </main>
+      <!-- Secciones adicionales -->
+      <main>
+        <section class="content-card perfil-biografia">
+          <h2>Información del Candidato</h2>
+          <p>Tipo de elección: {{ candidato['Tipo  Eleccion'] }}</p>
+          <p>Territorio Electoral: {{ candidato['Territorio  Electoral'] }}</p>
+        </section>
+      </main>
+    </div>
+    
+    <div v-else class="perfil-loading">
+      <p>Cargando información del candidato...</p>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from '#imports'
 
 const route = useRoute()
@@ -70,7 +48,8 @@ const candidato = ref({})
 const error = ref(false)
 const defaultFoto = 'https://placehold.co/150x150/E0E0E0/7F7F7F?text=Candidato'
 
-onMounted(async () => {
+const fetchCandidato = async () => {
+  error.value = false
   try {
     const res = await fetch(`/api/candidatos/${route.params.id}`)
     if (!res.ok) throw new Error('No encontrado')
@@ -80,7 +59,10 @@ onMounted(async () => {
   } catch (e) {
     error.value = true
   }
-})
+}
+
+onMounted(fetchCandidato)
+watch(() => route.params.id, fetchCandidato)
 </script>
 
 <style scoped>
@@ -93,6 +75,16 @@ onMounted(async () => {
   border-radius: 1rem;
   margin-bottom: 2rem;
   text-align: center;
+}
+
+.perfil-loading {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 body, html, * {
@@ -137,10 +129,16 @@ body, html, * {
 }
 
 .perfil-partido {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #1d4ed8;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.perfil-info-extra {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.3rem;
 }
 
 .perfil-lema {
