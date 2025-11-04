@@ -1,24 +1,5 @@
 <template>
-  <div>
-    <!-- Barra de navegación -->
-    <nav class="navbar">
-      <div class="navbar-container">
-        <a href="/" class="navbar-logo" title="Inicio - Tu Candidato">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-            <rect width="24" height="24" fill="#1D4ED8"/>
-            <path d="M12 2.5L14.6942 9.20124H21.8042L16.055 13.5975L18.7492 20.2988L12 15.9025L5.25078 20.2988L7.94501 13.5975L2.19579 9.20124H9.30582L12 2.5Z" fill="white"/>
-          </svg>
-          <span class="navbar-title">Tu <span class="navbar-title-blue">Candidato</span></span>
-        </a>
-        <div class="navbar-menu">
-          <a href="#candidatos">Candidatos</a>
-          <a href="#encuestas">Encuestas</a>
-          <a href="#faq">Preguntas</a>
-        </div>
-      </div>
-    </nav>
-
-    <div class="main-container">
+  <div class="main-container">
       <!-- Hero y cuenta regresiva -->
       <header class="content-card hero">
         <h1>Elecciones Presidenciales 2025</h1>
@@ -133,15 +114,7 @@
           </div>
         </section>
       </main>
-
-      <footer class="footer">
-        <div class="footer-card">
-          <p>Este es un sitio web independiente y no afiliado a ningún partido político.</p>
-          <p>&copy; 2025 Tu Candidato. Todos los derechos reservados.</p>
-        </div>
-      </footer>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -244,52 +217,6 @@ body {
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
-}
-
-.navbar {
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.navbar-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-}
-
-.navbar-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #222;
-}
-
-.navbar-title-blue {
-  color: #1D4ED8;
-}
-
-.navbar-menu a {
-  margin-left: 1.5rem;
-  color: #555;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.navbar-menu a:hover {
-  color: #1D4ED8;
 }
 
 .main-container {
@@ -400,7 +327,8 @@ body {
 
 .candidate-info-gradient {
   position: absolute;
-  inset-x: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   padding: 1.2rem;
   background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
@@ -560,23 +488,8 @@ body {
   display: inline-block;
 }
 
-.footer {
-  text-align: center;
-  color: #fff;
-  font-size: 1rem;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-}
-
-.footer-card {
-  background: rgba(0,0,0,0.3);
-  padding: 1.2rem 2rem;
-  border-radius: 1rem;
-  display: inline-block;
-}
-
 @media (max-width: 900px) {
-  .navbar-container, .main-container {
+  .main-container {
     padding: 1rem;
   }
   .candidates-scroll-container {
@@ -589,9 +502,6 @@ body {
 }
 
 @media (max-width: 600px) {
-  .navbar-title {
-    font-size: 1.3rem;
-  }
   .main-container {
     padding: 0.5rem;
   }
