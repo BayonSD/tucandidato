@@ -18,7 +18,7 @@
           <p class="perfil-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
           <p class="perfil-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] || 'Sin partido' }}</p>
           <p class="perfil-info-extra"><strong>Sexo:</strong> {{ candidato.Sexo === 'H' ? 'Hombre' : 'Mujer' }}</p>
-          <p class="perfil-info-extra"><strong>Rango de edad:</strong> {{ candidato.Rango }}</p>
+          <p class="perfil-info-extra"><strong>Rango:</strong> {{ candidato.Rango }}</p>
           <p class="perfil-info-extra"><strong>Región:</strong> {{ candidato['Región'] }}</p>
         </div>
       </header>

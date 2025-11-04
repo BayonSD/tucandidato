@@ -40,21 +40,29 @@ const isActive = (path) => {
 }
 </script>
 
-<style scoped>
-/* Reset global */
-* {
-  box-sizing: border-box;
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap');
+
+/* Estilos globales */
+body {
+  font-family: 'Roboto', Arial, sans-serif !important;
+  /* background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80'); */
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #333;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  color: #333;
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', Arial, sans-serif !important;
 }
+</style>
 
+<style scoped>
 /* Navbar */
 .navbar {
   background: #fff;
@@ -84,6 +92,7 @@ body {
   font-size: 2rem;
   font-weight: 800;
   color: #222;
+  font-family: 'Roboto', Arial, sans-serif !important;
 }
 
 .navbar-title-blue {

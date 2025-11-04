@@ -142,7 +142,7 @@
                 <p><strong>Partido:</strong> {{ candidato['Nombre  Partido'] }}</p>
                 <p><strong>Lista:</strong> {{ candidato['Lista/Nómina'] }}</p>
                 <p><strong>Sexo:</strong> {{ candidato.Sexo === 'H' ? 'Hombre' : 'Mujer' }}</p>
-                <p><strong>Edad:</strong> {{ candidato.Rango }}</p>
+                <p><strong>Rango:</strong> {{ candidato.Rango }}</p>
               </div>
             </div>
           </div>
