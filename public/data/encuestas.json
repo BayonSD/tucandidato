@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "fuente": "Encuesta Plaza Pública CADEM",
+    "fecha": "Noviembre 2025",
+    "semana": 43
+  },
+  "primeraVuelta": {
+    "titulo": "Primera Vuelta - Escenario Base 100",
+    "descripcion": "Si la elección fuera el próximo domingo",
+    "candidatos": [
+      {
+        "nombre": "Jeannette Jara",
+        "porcentaje": 31,
+        "variacion": "+1",
+        "color": "#1d4ed8"
+      },
+      {
+        "nombre": "José Antonio Kast",
+        "porcentaje": 25,
+        "variacion": "0",
+        "color": "#dc2626"
+      },
+      {
+        "nombre": "Evelyn Matthei",
+        "porcentaje": 16,
+        "variacion": "-1",
+        "color": "#ea580c"
+      },
+      {
+        "nombre": "Johannes Kaiser",
+        "porcentaje": 12,
+        "variacion": "0",
+        "color": "#9333ea"
+      },
+      {
+        "nombre": "Franco Parisi",
+        "porcentaje": 11,
+        "variacion": "0",
+        "color": "#eab308"
+      },
+      {
+        "nombre": "Harold Mayne-Nicholls",
+        "porcentaje": 3,
+        "variacion": "-1",
+        "color": "#16a34a"
+      },
+      {
+        "nombre": "Marco Enríquez-Ominami",
+        "porcentaje": 1,
+        "variacion": "0",
+        "color": "#6b7280"
+      },
+      {
+        "nombre": "Eduardo Artés",
+        "porcentaje": 1,
+        "variacion": "+1",
+        "color": "#374151"
+      }
+    ]
+  },
+  "expectativa": {
+    "titulo": "Expectativa Presidencial",
+    "descripcion": "¿Quién cree que será el próximo Presidente de Chile?",
+    "candidatos": [
+      {
+        "nombre": "José Antonio Kast",
+        "porcentaje": 38,
+        "variacion": "-2",
+        "color": "#dc2626"
+      },
+      {
+        "nombre": "Jeannette Jara",
+        "porcentaje": 32,
+        "variacion": "-2",
+        "color": "#1d4ed8"
+      },
+      {
+        "nombre": "Johannes Kaiser",
+        "porcentaje": 8,
+        "variacion": "+3",
+        "color": "#9333ea"
+      },
+      {
+        "nombre": "Evelyn Matthei",
+        "porcentaje": 7,
+        "variacion": "0",
+        "color": "#ea580c"
+      },
+      {
+        "nombre": "Franco Parisi",
+        "porcentaje": 7,
+        "variacion": "0",
+        "color": "#eab308"
+      }
+    ]
+  },
+  "segundaVuelta": {
+    "titulo": "Escenarios de Segunda Vuelta",
+    "descripcion": "Enfrentamientos directos entre candidatos",
+    "escenarios": [
+      {
+        "nombre": "Kast vs Jara",
+        "candidato1": {
+          "nombre": "José Antonio Kast",
+          "porcentaje": 47,
+          "color": "#dc2626"
+        },
+        "candidato2": {
+          "nombre": "Jeannette Jara",
+          "porcentaje": 36,
+          "color": "#1d4ed8"
+        },
+        "diferencia": 11
+      },
+      {
+        "nombre": "Matthei vs Jara",
+        "candidato1": {
+          "nombre": "Evelyn Matthei",
+          "porcentaje": 46,
+          "color": "#ea580c"
+        },
+        "candidato2": {
+          "nombre": "Jeannette Jara",
+          "porcentaje": 34,
+          "color": "#1d4ed8"
+        },
+        "diferencia": 12
+      },
+      {
+        "nombre": "Kast vs Matthei",
+        "candidato1": {
+          "nombre": "José Antonio Kast",
+          "porcentaje": 38,
+          "color": "#dc2626"
+        },
+        "candidato2": {
+          "nombre": "Evelyn Matthei",
+          "porcentaje": 30,
+          "color": "#ea580c"
+        },
+        "diferencia": 8
+      },
+      {
+        "nombre": "Parisi vs Jara",
+        "candidato1": {
+          "nombre": "Franco Parisi",
+          "porcentaje": 40,
+          "color": "#eab308"
+        },
+        "candidato2": {
+          "nombre": "Jeannette Jara",
+          "porcentaje": 36,
+          "color": "#1d4ed8"
+        },
+        "diferencia": 4
+      },
+      {
+        "nombre": "Kaiser vs Jara",
+        "candidato1": {
+          "nombre": "Johannes Kaiser",
+          "porcentaje": 39,
+          "color": "#9333ea"
+        },
+        "candidato2": {
+          "nombre": "Jeannette Jara",
+          "porcentaje": 39,
+          "color": "#1d4ed8"
+        },
+        "diferencia": 0,
+        "empate": true
+      }
+    ]
+  }
+}
