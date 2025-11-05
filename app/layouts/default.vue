@@ -46,7 +46,7 @@ const isActive = (path) => {
 /* Estilos globales */
 body {
   font-family: 'Roboto', Arial, sans-serif !important;
-  /* background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80'); */
+  /* background-image: url('/candidatos.avif'); */
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
