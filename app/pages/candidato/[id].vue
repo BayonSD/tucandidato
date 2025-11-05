@@ -30,6 +30,26 @@
           <p>Tipo de elección: {{ candidato['Tipo  Eleccion'] }}</p>
           <p>Territorio Electoral: {{ candidato['Territorio  Electoral'] }}</p>
         </section>
+
+        <section class="content-card perfil-noticias">
+          <h2>📰 Últimas Noticias</h2>
+          <div v-if="loadingNoticias">Cargando noticias...</div>
+          <ul v-else>
+            <li v-for="noticia in noticias" :key="noticia.url" class="noticia-item">
+              <a :href="noticia.url" target="_blank" rel="noopener">
+                <strong>{{ noticia.titulo }}</strong>
+              </a>
+              <div class="noticia-meta">
+                <span>{{ noticia.medio }}</span> ·
+                <span>{{ noticia.fecha }}</span>
+              </div>
+              <p>{{ noticia.resumen }}</p>
+            </li>
+          </ul>
+          <div v-if="!loadingNoticias && noticias.length === 0">
+            <em>No se encontraron noticias recientes.</em>
+          </div>
+        </section>
       </main>
     </div>
     
@@ -48,6 +68,28 @@ const candidato = ref({})
 const error = ref(false)
 const defaultFoto = 'https://placehold.co/150x150/E0E0E0/7F7F7F?text=Candidato'
 
+// Noticias
+const noticias = ref([])
+const loadingNoticias = ref(false)
+
+const fetchNoticias = async () => {
+  loadingNoticias.value = true
+  noticias.value = []
+  try {
+    const nombreCompleto = `${candidato.value.Nombre} ${candidato.value['Primer  Apellido']} ${candidato.value['Segundo  Apellido']}`.trim()
+    const tipo = candidato.value['Tipo  Eleccion'] || candidato.value.tipo_eleccion || 'presidente'
+    if (!nombreCompleto) throw new Error('Nombre vacío')
+    const res = await fetch(`/api/noticias?nombre=${encodeURIComponent(nombreCompleto)}&tipo=${encodeURIComponent(tipo)}`)
+    if (!res.ok) throw new Error('Error noticias')
+    const data = await res.json()
+    noticias.value = data.noticias
+  } catch (e) {
+    noticias.value = []
+  } finally {
+    loadingNoticias.value = false
+  }
+}
+
 const fetchCandidato = async () => {
   error.value = false
   try {
@@ -56,6 +98,7 @@ const fetchCandidato = async () => {
     const data = await res.json()
     if (!data || Object.keys(data).length === 0) throw new Error('No encontrado')
     candidato.value = data
+    await fetchNoticias() // <-- Llama a noticias después de cargar candidato
   } catch (e) {
     error.value = true
   }
