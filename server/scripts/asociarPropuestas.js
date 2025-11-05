@@ -5,14 +5,14 @@ import Candidato from '../models/candidato.js'
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/elecciones_chile_2025'
 
 const propuestasPDF = {
-  'JEANNETTE JARA ROMAN': 'jara.pdf',
-  'JOSE ANTONIO KAST RIST': 'kast.pdf',
-  'EVELYN MATTHEI FORNET': 'matthei.pdf',
-  'JOHANNES KAISER BARENTS-VON HOHENHAGEN': 'kaiser.pdf',
-  'FRANCO PARISI FERNANDEZ': 'parisi.pdf',
-  'HAROLD MAYNE-NICHOLLS SECUL': 'mayne-nicholls.pdf',
-  'MARCO ANTONIO ENRIQUEZ-OMINAMI GUMUCIO': 'enriquez-ominami.pdf',
-  'EDUARDO ANTONIO ARTES BRICHETTI': 'artes.pdf'
+  'JEANNETTE JARA ROMAN': 'Jara.pdf',
+  'JOSE ANTONIO KAST RIST': 'Kast.pdf',
+  'EVELYN MATTHEI FORNET': 'Matthei.pdf',
+  'JOHANNES KAISER BARENTS-VON HOHENHAGEN': 'Kaiser.pdf',
+  'FRANCO PARISI FERNANDEZ': 'Parisi.pdf',
+  'HAROLD MAYNE-NICHOLLS SECUL': 'Mayne-nicholls.pdf',
+  'MARCO ANTONIO ENRIQUEZ-OMINAMI GUMUCIO': 'MEO.pdf',
+  'EDUARDO ANTONIO ARTES BRICHETTI': 'Artes.pdf'
 }
 
 function normalizarNombre(nombre, apellido1, apellido2) {

@@ -31,6 +31,38 @@
           <p>Territorio Electoral: {{ candidato['Territorio  Electoral'] }}</p>
         </section>
 
+                <section
+          v-if="candidato.propuestaPDF"
+          class="content-card perfil-propuestas"
+        >
+          <h2>📋 Propuesta de Gobierno</h2>
+          <div class="pdf-controls">
+            <a
+              :href="candidato.propuestaPDF"
+              target="_blank"
+              class="btn-abrir"
+            >
+              🔗 Abrir en nueva pestaña
+            </a>
+            <a
+              :href="candidato.propuestaPDF"
+              download
+              class="btn-descargar"
+            >
+              📥 Descargar PDF
+            </a>
+          </div>
+          <div class="pdf-viewer">
+            <iframe
+              :src="candidato.propuestaPDF"
+              width="100%"
+              height="800px"
+              frameborder="0"
+            />
+          </div>
+        </section>
+
+
         <section class="content-card perfil-noticias">
           <h2>📰 Últimas Noticias</h2>
           <div v-if="loadingNoticias">Cargando noticias...</div>
@@ -211,6 +243,54 @@ body, html, * {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+
+
+.pdf-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-abrir,
+.btn-descargar {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-abrir {
+  background: #1d4ed8;
+  color: white;
+}
+
+.btn-abrir:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+.btn-descargar {
+  background: #10b981;
+  color: white;
+}
+
+.btn-descargar:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.pdf-viewer {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9fafb;
+  margin-bottom: 1rem;
+}
+
+.pdf-viewer iframe {
+  display: block;
 }
 
 @media (max-width: 700px) {
