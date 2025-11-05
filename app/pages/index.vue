@@ -152,7 +152,8 @@ const countdown = ref({
 })
 
 const updateCountdown = () => {
-  const electionDate = new Date(2025, 10, 21, 8, 0, 0).getTime()
+  // Domingo 16 de noviembre de 2025, 8:00 AM (hora local Chile)
+  const electionDate = new Date(2025, 10, 16, 8, 0, 0).getTime()
   const now = new Date().getTime()
   const distance = electionDate - now
 
