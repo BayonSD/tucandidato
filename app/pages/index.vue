@@ -34,11 +34,7 @@
               :key="candidato._id"
               class="candidate-card-horizontal"
             >
-              <img
-                :src="candidato.fotoUrl || defaultFoto"
-                :alt="'Foto ' + candidato.Nombre + ' ' + candidato['Primer  Apellido'] + ' ' + candidato['Segundo  Apellido']"
-                class="candidate-img"
-              />
+            <img :src="candidato.fotoUrl || defaultFoto" class="candidate-img" />
               <div class="candidate-info-gradient">
                 <h3>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h3>
                 <p class="candidate-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>

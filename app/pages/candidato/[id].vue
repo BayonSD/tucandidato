@@ -8,11 +8,7 @@
     <div v-else-if="candidato && candidato._id">
       <!-- Sección principal: datos desde MongoDB -->
       <header class="content-card perfil-header">
-        <img
-          :src="candidato.fotoUrl || defaultFoto"
-          alt="Foto del Candidato"
-          class="perfil-foto"
-        >
+        <img :src="candidato.fotoUrl || defaultFoto" alt="Foto del Candidato" class="perfil-foto">
         <div class="perfil-info">
           <h1>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h1>
           <p class="perfil-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
