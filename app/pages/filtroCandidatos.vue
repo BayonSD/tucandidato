@@ -148,13 +148,6 @@
           </div>
         </div>
       </div>
-
-      <footer class="footer">
-        <div class="footer-card">
-          <p>Este es un sitio web independiente y no afiliado a ningún partido político.</p>
-          <p>&copy; 2025 Tu Candidato. Todos los derechos reservados.</p>
-        </div>
-      </footer>
     </div>
   </div>
 </template>
