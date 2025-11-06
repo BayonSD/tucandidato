@@ -186,10 +186,32 @@ const regiones = computed(() => {
   return Array.from(regionesSet).sort()
 })
 
-// Computed: Comunas únicas de todos los territorios
+// Computed: Comunas filtradas según región seleccionada
 const comunas = computed(() => {
   const comunasSet = new Set()
-  territorios.value.forEach(t => {
+  let territoriosParaComunas = territorios.value
+
+  // Filtrar territorios por región si hay una seleccionada
+  if (filtros.value.region) {
+    territoriosParaComunas = territoriosParaComunas.filter(t => t.region === filtros.value.region)
+  }
+
+  // Filtrar por tipo de elección si está seleccionado
+  if (filtros.value.tipoEleccion && filtros.value.tipoEleccion !== 'PRESIDENTE') {
+    territoriosParaComunas = territoriosParaComunas.filter(t => 
+      t.tipo && t.tipo.toUpperCase() === filtros.value.tipoEleccion
+    )
+  }
+
+  // Filtrar por número de distrito/circunscripción si está seleccionado
+  if (filtros.value.distrito) {
+    territoriosParaComunas = territoriosParaComunas.filter(t => {
+      const match = t.nombre_territorio.match(/\d+/)
+      return match && parseInt(match[0]) === parseInt(filtros.value.distrito)
+    })
+  }
+
+  territoriosParaComunas.forEach(t => {
     if (t.comunas && Array.isArray(t.comunas)) {
       t.comunas.forEach(comuna => comunasSet.add(comuna))
     }

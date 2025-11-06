@@ -181,7 +181,7 @@ onMounted(() => {
 const faqs = ref([
   {
     question: '¿Cuándo son las elecciones?',
-    answer: 'La próxima elección presidencial de Chile está programada para el <b>domingo 21 de noviembre de 2025</b>. Si ningún candidato obtiene la mayoría absoluta (más del 50% de los votos), se realizará una segunda vuelta (balotaje) el domingo 19 de diciembre de 2025.',
+    answer: 'La próxima elección presidencial de Chile está programada para el <b>domingo 21 de noviembre de 2025</b>.',
     open: false
   },
   {
