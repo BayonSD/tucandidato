@@ -11,9 +11,11 @@
           <span class="navbar-title">Tu <span class="navbar-title-blue">Candidato</span></span>
         </NuxtLink>
         <div class="navbar-menu">
-          <NuxtLink to="/" :class="{ active: isActive('/') }">Inicio</NuxtLink>
-          <NuxtLink to="/filtroCandidatos" :class="{ active: isActive('/filtroCandidatos') }">Candidatos</NuxtLink>
-          <NuxtLink to="/cadem" :class="{ active: isActive('/cadem') }">Encuestas</NuxtLink>
+         <NuxtLink to="/" :class="{ active: isActive('/') }">Inicio</NuxtLink>
+         <NuxtLink to="/filtroCandidatos" :class="{ active: isActive('/filtroCandidatos') }">Candidatos</NuxtLink>
+         <NuxtLink to="/comparar" :class="{ active: isActive('/filtrarCandidato') }">Comparar Candidato</NuxtLink>
+         <NuxtLink to="/cadem" :class="{ active: isActive('/cadem') }">Encuestas</NuxtLink>
+         <NuxtLink to="/quienesSomos" :class="{ active: isActive('/quienesSomos') }">Quiénes Somos</NuxtLink>
         </div>
       </div>
     </nav>
