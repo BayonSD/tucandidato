@@ -12,11 +12,13 @@ const candidatoSchema = new mongoose.Schema({
   'Lista/Nómina': String,
   'Nombre  Partido': String,
   'Región': String,
+
   descripcion_auto: { type: String, default: null },
   fotoUrl: { type: String, default: null },
-
-  // Campo para la propuesta de gobierno (PDF)
-  propuestaPDF: { type: String, default: null }
+  propuestaPDF: { type: String, default: null },
+  cvContenido: { type: Object, default: null },
+  fuentes: { type: [String], default: [] }
+  
 }, { 
   timestamps: true,
   strict: false // Permite guardar campos adicionales no definidos

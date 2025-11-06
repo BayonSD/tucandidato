@@ -27,7 +27,7 @@
           <p>Territorio Electoral: {{ candidato['Territorio  Electoral'] }}</p>
         </section>
 
-                <section
+        <section
           v-if="candidato.propuestaPDF"
           class="content-card perfil-propuestas"
         >
@@ -58,6 +58,49 @@
           </div>
         </section>
 
+      <section v-if="candidato.cvContenido" class="content-card perfil-cv">
+        <h2>📋 Curriculum Vitae</h2>
+        
+        <div v-if="candidato.cvContenido.formacion && candidato.cvContenido.formacion.length > 0" class="cv-section">
+          <h3>🎓 Formación</h3>
+          <ul v-if="Array.isArray(candidato.cvContenido.formacion)">
+            <li v-for="(item, index) in candidato.cvContenido.formacion" :key="index">
+              {{ item }}
+            </li>
+          </ul>
+          <p v-else class="cv-single-item">
+            {{ candidato.cvContenido.formacion }}
+          </p>
+        </div>
+
+        <div v-if="candidato.cvContenido.experiencia && candidato.cvContenido.experiencia.length > 0" class="cv-section">
+          <h3>💼 Experiencia</h3>
+          <ul>
+            <li v-for="(exp, index) in candidato.cvContenido.experiencia" :key="index">
+              {{ exp }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="candidato.cvContenido.logros && candidato.cvContenido.logros.length > 0" class="cv-section">
+          <h3>🏆 Logros</h3>
+          <ul>
+            <li v-for="(logro, index) in candidato.cvContenido.logros" :key="index">
+              {{ logro }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="candidato.fuentes && candidato.fuentes.length > 0" class="cv-section">
+          <h3>📚 Fuentes</h3>
+          <ul>
+            <li v-for="(fuente, index) in candidato.fuentes" :key="index">
+              <a v-if="fuente.startsWith('http')" :href="fuente" target="_blank" rel="noopener">{{ fuente }}</a>
+              <span v-else>{{ fuente }}</span>
+            </li>
+          </ul>
+        </div>
+      </section>
 
         <section class="content-card perfil-noticias">
           <h2>📰 Últimas Noticias</h2>
@@ -287,6 +330,67 @@ body, html, * {
 
 .pdf-viewer iframe {
   display: block;
+}
+
+.perfil-cv {
+  margin-top: 2rem;
+}
+
+.cv-section {
+  margin-bottom: 2rem;
+}
+
+.cv-section h3 {
+  color: #1d4ed8;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.cv-section p {
+  line-height: 1.8;
+  color: #4b5563;
+}
+
+.cv-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.cv-section ul li {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.cv-section ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.cv-section a {
+  color: #1d4ed8;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.cv-section a:hover {
+  text-decoration: underline;
+}
+
+.cv-single-item {
+  background: #f3f4f6;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #374151;
+  margin-bottom: 1rem;
+  font-style: italic;
 }
 
 @media (max-width: 700px) {
