@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI("AIzaSyCVxvWYfyYT85T_zo5zDPYu35_9X4fztEE", {
+const genAI = new GoogleGenerativeAI("BRUH", {
   apiEndpoint: "https://generativelanguage.googleapis.com/v1"
 });
 
