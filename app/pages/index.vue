@@ -171,7 +171,7 @@ onMounted(() => {
 const faqs = ref([
   {
     question: '¿Cuándo son las elecciones?',
-    answer: 'La próxima elección presidencial de Chile está programada para el <b>domingo 21 de noviembre de 2025</b>.',
+    answer: 'La próxima elección presidencial de Chile está programada para el <b>domingo 16 de noviembre de 2025</b>.',
     open: false
   },
   {

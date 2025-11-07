@@ -28,7 +28,7 @@
         </section>
 
         <section
-          v-if="candidato.propuestas && Object.keys(candidato.propuestas).length > 0"
+          v-if="candidato.propuestas && Object.keys(candidato.propuestas).length > 0 && candidato['Tipo  Eleccion']?.toLowerCase() === 'presidente'"
           class="content-card perfil-propuestas"
         >
           <h2>📋 Propuestas de Gobierno por Categoría</h2>
