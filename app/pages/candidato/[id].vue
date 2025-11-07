@@ -28,10 +28,41 @@
         </section>
 
         <section
-          v-if="candidato.propuestaPDF"
+          v-if="candidato.propuestas && Object.keys(candidato.propuestas).length > 0"
           class="content-card perfil-propuestas"
         >
-          <h2>📋 Propuesta de Gobierno</h2>
+          <h2>📋 Propuestas de Gobierno por Categoría</h2>
+          <div class="propuestas-accordion">
+            <div
+              v-for="(propuestas, categoria) in candidato.propuestas"
+              :key="categoria"
+              class="accordion-item"
+            >
+              <button
+                class="accordion-header"
+                @click="toggleCategoria(categoria)"
+                :aria-expanded="categoriasAbiertas[categoria]"
+              >
+                <span class="accordion-title">{{ getEmojiCategoria(categoria) }} {{ categoria }}</span>
+                <span class="accordion-chevron" :class="{ open: categoriasAbiertas[categoria] }">▼</span>
+              </button>
+              <div v-show="categoriasAbiertas[categoria]" class="accordion-content">
+                <ul v-if="Array.isArray(propuestas) && propuestas.length > 0">
+                  <li v-for="(propuesta, index) in propuestas" :key="index">
+                    {{ propuesta }}
+                  </li>
+                </ul>
+                <p v-else class="sin-propuestas">No hay propuestas registradas para esta categoría.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          v-if="candidato.propuestaPDF"
+          class="content-card perfil-propuestas-pdf"
+        >
+          <h2>📋 Documento de Propuesta</h2>
           <div class="pdf-controls">
             <a
               :href="candidato.propuestaPDF"
@@ -142,6 +173,50 @@ const defaultFoto = 'https://placehold.co/150x150/E0E0E0/7F7F7F?text=Candidato'
 // Noticias
 const noticias = ref([])
 const loadingNoticias = ref(false)
+
+// Acordeón de categorías
+const categoriasAbiertas = ref({})
+
+const emojisCategoria = {
+  "Agricultura": "🌾",
+  "Cultura": "🎭",
+  "Deporte": "🏅",
+  "Descentralización": "🗺️",
+  "Economía / Crecimiento": "📈",
+  "Educación": "📘",
+  "Empleo y Trabajo": "🧑‍💼",
+  "Energía": "⚡",
+  "Igualdad y Género": "⚧️",
+  "Infraestructura": "🧱",
+  "Innovación Social": "🤝",
+  "Innovación y Ciencia": "🔬",
+  "Integridad / Anticorrupción": "🚫",
+  "Justicia": "⚖️",
+  "Medio Ambiente": "🌿",
+  "Migración": "🧭",
+  "Participación Ciudadana": "🗳️",
+  "Pensiones": "💰",
+  "Pueblos Originarios": "🪶",
+  "Recursos Hídricos": "💧",
+  "Reducción de Pobreza": "📉",
+  "Reforma Tributaria": "🧾",
+  "Relaciones Exteriores": "🌐",
+  "Salud": "🩺",
+  "Seguridad Pública": "🛡️",
+  "Sistema Penitenciario": "🏛️",
+  "Transformación Digital": "💻",
+  "Transporte": "🚉",
+  "Turismo": "🧳",
+  "Vivienda": "🏠"
+}
+
+const toggleCategoria = (categoria) => {
+  categoriasAbiertas.value[categoria] = !categoriasAbiertas.value[categoria]
+}
+
+const getEmojiCategoria = (categoria) => {
+  return emojisCategoria[categoria] || "📌"
+}
 
 const fetchNoticias = async () => {
   loadingNoticias.value = true
@@ -393,6 +468,91 @@ body, html, * {
   font-style: italic;
 }
 
+/* Estilos del acordeón de propuestas */
+.propuestas-accordion {
+  margin-top: 1.5rem;
+}
+
+.accordion-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-header {
+  width: 100%;
+  background: #f9fafb;
+  border: none;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.accordion-header:hover {
+  background: #f3f4f6;
+}
+
+.accordion-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.accordion-chevron {
+  font-size: 0.9rem;
+  color: #6b7280;
+  transition: transform 0.3s;
+}
+
+.accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 1.5rem;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.accordion-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.accordion-content ul li {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.6;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.accordion-content ul li:last-child {
+  border-bottom: none;
+}
+
+.accordion-content ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.sin-propuestas {
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
 @media (max-width: 700px) {
   .perfil-header {
     flex-direction: column;
@@ -400,7 +560,19 @@ body, html, * {
     gap: 1rem;
     padding: 1rem;
   }
-  .perfil-biografia, .perfil-cv, .perfil-propuestas, .perfil-noticias {
+  .perfil-biografia, .perfil-cv, .perfil-propuestas, .perfil-propuestas-pdf, .perfil-noticias {
+    padding: 1rem;
+  }
+  
+  .accordion-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .accordion-title {
+    font-size: 1rem;
+  }
+  
+  .accordion-content {
     padding: 1rem;
   }
 }
