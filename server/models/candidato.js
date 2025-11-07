@@ -1,5 +1,38 @@
 import mongoose from 'mongoose'
 
+const categoriasPropuestas = {
+  "Agricultura": "",
+  "Cultura": "",
+  "Deporte": "",
+  "Descentralización": "",
+  "Economía / Crecimiento": "",
+  "Educación": "",
+  "Empleo y Trabajo": "",
+  "Energía": "",
+  "Igualdad y Género": "",
+  "Infraestructura": "",
+  "Innovación Social": "",
+  "Innovación y Ciencia": "",
+  "Integridad / Anticorrupción": "",
+  "Justicia": "",
+  "Medio Ambiente": "",
+  "Migración": "",
+  "Participación Ciudadana": "",
+  "Pensiones": "",
+  "Pueblos Originarios": "",
+  "Recursos Hídricos": "",
+  "Reducción de Pobreza": "",
+  "Reforma Tributaria": "",
+  "Relaciones Exteriores": "",
+  "Salud": "",
+  "Seguridad Pública": "",
+  "Sistema Penitenciario": "",
+  "Transformación Digital": "",
+  "Transporte": "",
+  "Turismo": "",
+  "Vivienda": ""
+}
+
 const candidatoSchema = new mongoose.Schema({
   // Ejemplo de campos principales (ajusta según tu estructura real)
   Nombre: String,
@@ -17,7 +50,9 @@ const candidatoSchema = new mongoose.Schema({
   fotoUrl: { type: String, default: null },
   propuestaPDF: { type: String, default: null },
   cvContenido: { type: Object, default: null },
-  fuentes: { type: [String], default: [] }
+  fuentes: { type: [String], default: [] },
+
+  propuestas: { type: Object, default: categoriasPropuestas }
   
 }, { 
   timestamps: true,
