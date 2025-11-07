@@ -1,112 +1,99 @@
 <template>
   <div class="comparativa-container">
     <h2 class="comparar-titulo">Comparar Candidatos Presidenciales</h2>
-    <div class="comparador-selectores">
+    
+    <!-- Fila de selección de candidatos -->
+    <div class="seleccion-candidatos">
+      <h3>Selecciona los candidatos a comparar:</h3>
       <div class="candidates-scroll-container">
         <div
           v-for="candidato in presidenciales"
           :key="candidato._id"
-          :class="['candidate-card-horizontal', id1 === candidato._id ? 'selected' : '']"
-          @click="id1 = candidato._id"
+          :class="['candidate-card-horizontal', candidatosSeleccionados.includes(candidato._id) ? 'selected' : '']"
+          @click="toggleCandidato(candidato._id)"
         >
           <img :src="candidato.fotoUrl || defaultFoto" class="candidate-img" />
           <div class="candidate-info-gradient">
             <h3>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h3>
-            <p class="candidate-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
             <p class="candidate-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] }}</p>
-            <span v-if="id1 === candidato._id" class="selected-label">Candidato 1</span>
+            <span v-if="candidatosSeleccionados.includes(candidato._id)" class="selected-label">✓</span>
           </div>
         </div>
       </div>
-      <div class="candidates-scroll-container">
-        <div
-          v-for="candidato in presidenciales"
-          :key="candidato._id"
-          :class="['candidate-card-horizontal', id2 === candidato._id ? 'selected' : '']"
-          @click="id2 = candidato._id"
-        >
-          <img :src="candidato.fotoUrl || defaultFoto" class="candidate-img" />
-          <div class="candidate-info-gradient">
-            <h3>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h3>
-            <p class="candidate-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
-            <p class="candidate-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] }}</p>
-            <span v-if="id2 === candidato._id" class="selected-label">Candidato 2</span>
-          </div>
-        </div>
-      </div>
-      <button @click="comparar" :disabled="!id1 || !id2 || id1 === id2" class="candidate-btn">Comparar</button>
     </div>
-    <div v-if="candidato1 && candidato2" class="comparador-datos">
-      <div class="candidato-col">
-        <h2>{{ candidato1.Nombre }} {{ candidato1['Primer  Apellido'] }} {{ candidato1['Segundo  Apellido'] }}</h2>
-        <img :src="candidato1.fotoUrl || defaultFoto" alt="Foto" class="perfil-foto" />
-        <p><strong>Partido:</strong> {{ candidato1['Nombre  Partido'] }}</p>
-        <p><strong>Lista/Nómina:</strong> {{ candidato1['Lista/Nómina'] }}</p>
-        <p><strong>Región:</strong> {{ candidato1['Región'] }}</p>
-        <section v-if="candidato1.cvContenido">
-        <div v-if="candidato1.cvContenido.formacion && candidato1.cvContenido.formacion.length > 0" class="cv-section">
-            <h3>🎓 Formación</h3>
-            <ul v-if="Array.isArray(candidato1.cvContenido.formacion)">
-            <li v-for="(item, index) in candidato1.cvContenido.formacion" :key="index">
-                {{ item }}
-            </li>
-            </ul>
-            <p v-else class="cv-single-item">
-            {{ candidato1.cvContenido.formacion }}
-            </p>
-        </div>
-          <h3>💼 Experiencia</h3>
-          <ul>
-            <li v-for="(item, index) in candidato1.cvContenido.experiencia" :key="index">{{ item }}</li>
-          </ul>
-          <h3>🏆 Logros</h3>
-          <ul>
-            <li v-for="(item, index) in candidato1.cvContenido.logros" :key="index">{{ item }}</li>
-          </ul>
-          <h3>📚 Fuentes</h3>
-          <ul>
-            <li v-for="(fuente, index) in candidato1.fuentes" :key="index">
-              <a v-if="fuente.startsWith('http')" :href="fuente" target="_blank" rel="noopener">{{ fuente }}</a>
-              <span v-else>{{ fuente }}</span>
-            </li>
-          </ul>
-        </section>
+
+    <!-- Filtro de categorías -->
+    <div v-if="candidatosSeleccionados.length > 0" class="filtro-categorias">
+      <h3>Selecciona las categorías a comparar:</h3>
+      <div class="categorias-chips">
+        <button
+          :class="['chip', categoriasSeleccionadas.length === 0 ? 'active' : '']"
+          @click="categoriasSeleccionadas = []"
+        >
+          Todas
+        </button>
+        <button
+          v-for="cat in categoriasDisponibles"
+          :key="cat"
+          :class="['chip', categoriasSeleccionadas.includes(cat) ? 'active' : '']"
+          @click="toggleCategoria(cat)"
+        >
+          {{ getEmojiCategoria(cat) }} {{ cat }}
+        </button>
       </div>
-      <div class="candidato-col">
-        <h2>{{ candidato2.Nombre }} {{ candidato2['Primer  Apellido'] }} {{ candidato2['Segundo  Apellido'] }}</h2>
-        <img :src="candidato2.fotoUrl || defaultFoto" alt="Foto" class="perfil-foto" />
-        <p><strong>Partido:</strong> {{ candidato2['Nombre  Partido'] }}</p>
-        <p><strong>Lista/Nómina:</strong> {{ candidato2['Lista/Nómina'] }}</p>
-        <p><strong>Región:</strong> {{ candidato2['Región'] }}</p>
-        <section v-if="candidato2.cvContenido">
-            <div v-if="candidato2.cvContenido.formacion && candidato2.cvContenido.formacion.length > 0" class="cv-section">
-                <h3>🎓 Formación</h3>
-                <ul v-if="Array.isArray(candidato2.cvContenido.formacion)">
-                <li v-for="(item, index) in candidato2.cvContenido.formacion" :key="index">
-                    {{ item }}
-                </li>
-                </ul>
-                <p v-else class="cv-single-item">
-                {{ candidato2.cvContenido.formacion }}
-                </p>
+    </div>
+
+    <!-- Comparación por categorías -->
+    <div v-if="candidatosSeleccionados.length > 0" class="comparador-categorias">
+      <!-- Acordeón por categoría -->
+      <div
+        v-for="categoria in categoriasFiltradas"
+        :key="categoria"
+        class="categoria-accordion"
+      >
+        <button
+          class="categoria-header"
+          @click="toggleCategoriaAccordion(categoria)"
+        >
+          <span class="categoria-titulo">{{ getEmojiCategoria(categoria) }} {{ categoria }}</span>
+          <span class="accordion-chevron" :class="{ open: categoriasAbiertas[categoria] }">▼</span>
+        </button>
+        
+        <!-- Contenido: candidatos en fila horizontal con swipe -->
+        <div v-show="categoriasAbiertas[categoria]" class="categoria-content">
+          <div class="candidatos-scroll-wrapper">
+            <div class="candidatos-row-swipe">
+              <div
+                v-for="idCandidato in candidatosSeleccionados"
+                :key="idCandidato"
+                class="candidato-card"
+              >
+                <div class="candidato-header">
+                  <img :src="getCandidato(idCandidato)?.fotoUrl || defaultFoto" class="foto-candidato" />
+                  <div class="candidato-info">
+                    <h4>{{ getCandidato(idCandidato)?.Nombre }} {{ getCandidato(idCandidato)?.['Primer  Apellido'] }}</h4>
+                    <p class="partido-label">{{ getCandidato(idCandidato)?.['Nombre  Partido'] }}</p>
+                  </div>
+                </div>
+                
+                <!-- Propuestas del candidato para esta categoría -->
+                <div class="propuestas-content">
+                  <ul v-if="getPropuestas(idCandidato, categoria).length > 0">
+                    <li v-for="(propuesta, index) in getPropuestas(idCandidato, categoria)" :key="index">
+                      {{ propuesta }}
+                    </li>
+                  </ul>
+                  <p v-else class="sin-propuestas">Sin propuestas registradas</p>
+                </div>
+              </div>
             </div>
-          <h3>💼 Experiencia</h3>
-          <ul>
-            <li v-for="(item, index) in candidato2.cvContenido.experiencia" :key="index">{{ item }}</li>
-          </ul>
-          <h3>🏆 Logros</h3>
-          <ul>
-            <li v-for="(item, index) in candidato2.cvContenido.logros" :key="index">{{ item }}</li>
-          </ul>
-          <h3>📚 Fuentes</h3>
-          <ul>
-            <li v-for="(fuente, index) in candidato2.fuentes" :key="index">
-              <a v-if="fuente.startsWith('http')" :href="fuente" target="_blank" rel="noopener">{{ fuente }}</a>
-              <span v-else>{{ fuente }}</span>
-            </li>
-          </ul>
-        </section>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div v-else class="mensaje-vacio">
+      <p>� Selecciona uno o más candidatos para comparar sus propuestas</p>
     </div>
   </div>
 </template>
@@ -115,11 +102,33 @@
 import { ref, computed, onMounted } from 'vue'
 
 const candidatos = ref([])
-const id1 = ref('')
-const id2 = ref('')
-const candidato1 = ref(null)
-const candidato2 = ref(null)
+const candidatosSeleccionados = ref([])
+const categoriasSeleccionadas = ref([])
+const categoriasAbiertas = ref({})
 const defaultFoto = 'https://picsum.photos/seed/presidente/400/600'
+
+const categoriasDisponibles = [
+  "Agricultura", "Cultura", "Deporte", "Descentralización", "Economía / Crecimiento",
+  "Educación", "Empleo y Trabajo", "Energía", "Igualdad y Género", "Infraestructura",
+  "Innovación Social", "Innovación y Ciencia", "Integridad / Anticorrupción", "Justicia",
+  "Medio Ambiente", "Migración", "Participación Ciudadana", "Pensiones", "Pueblos Originarios",
+  "Recursos Hídricos", "Reducción de Pobreza", "Reforma Tributaria", "Relaciones Exteriores",
+  "Salud", "Seguridad Pública", "Sistema Penitenciario", "Transformación Digital",
+  "Transporte", "Turismo", "Vivienda"
+]
+
+const emojisCategoria = {
+  "Agricultura": "🌾", "Cultura": "🎭", "Deporte": "🏅", "Descentralización": "🗺️",
+  "Economía / Crecimiento": "📈", "Educación": "📘", "Empleo y Trabajo": "🧑‍💼",
+  "Energía": "⚡", "Igualdad y Género": "⚧️", "Infraestructura": "🧱",
+  "Innovación Social": "🤝", "Innovación y Ciencia": "🔬", "Integridad / Anticorrupción": "🚫",
+  "Justicia": "⚖️", "Medio Ambiente": "🌿", "Migración": "🧭",
+  "Participación Ciudadana": "🗳️", "Pensiones": "💰", "Pueblos Originarios": "🪶",
+  "Recursos Hídricos": "💧", "Reducción de Pobreza": "📉", "Reforma Tributaria": "🧾",
+  "Relaciones Exteriores": "🌐", "Salud": "🩺", "Seguridad Pública": "🛡️",
+  "Sistema Penitenciario": "🏛️", "Transformación Digital": "💻", "Transporte": "🚉",
+  "Turismo": "🧳", "Vivienda": "🏠"
+}
 
 const fetchCandidatos = async () => {
   const res = await fetch('/api/candidatos')
@@ -130,13 +139,46 @@ const presidenciales = computed(() =>
   candidatos.value.filter(c => c["Tipo  Eleccion"] === "PRESIDENTE")
 )
 
-const comparar = async () => {
-  if (id1.value && id2.value && id1.value !== id2.value) {
-    const res1 = await fetch(`/api/candidatos/${id1.value}`)
-    candidato1.value = await res1.json()
-    const res2 = await fetch(`/api/candidatos/${id2.value}`)
-    candidato2.value = await res2.json()
+const categoriasFiltradas = computed(() => {
+  return categoriasSeleccionadas.value.length > 0 ? categoriasSeleccionadas.value : categoriasDisponibles
+})
+
+const toggleCategoria = (categoria) => {
+  const index = categoriasSeleccionadas.value.indexOf(categoria)
+  if (index > -1) {
+    categoriasSeleccionadas.value.splice(index, 1)
+  } else {
+    categoriasSeleccionadas.value.push(categoria)
   }
+}
+
+const toggleCandidato = (id) => {
+  const index = candidatosSeleccionados.value.indexOf(id)
+  if (index > -1) {
+    candidatosSeleccionados.value.splice(index, 1)
+  } else {
+    candidatosSeleccionados.value.push(id)
+  }
+}
+
+const getCandidato = (id) => {
+  return candidatos.value.find(c => c._id === id)
+}
+
+const getPropuestas = (idCandidato, categoria) => {
+  const candidato = getCandidato(idCandidato)
+  if (!candidato || !candidato.propuestas || !candidato.propuestas[categoria]) {
+    return []
+  }
+  return Array.isArray(candidato.propuestas[categoria]) ? candidato.propuestas[categoria] : []
+}
+
+const toggleCategoriaAccordion = (categoria) => {
+  categoriasAbiertas.value[categoria] = !categoriasAbiertas.value[categoria]
+}
+
+const getEmojiCategoria = (categoria) => {
+  return emojisCategoria[categoria] || "📌"
 }
 
 onMounted(fetchCandidatos)
@@ -144,26 +186,36 @@ onMounted(fetchCandidatos)
 
 <style scoped>
 .comparativa-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
 .comparar-titulo {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-}
-.comparador-selectores {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: stretch;
   margin-bottom: 2rem;
+  color: #1f2937;
 }
+
+/* Selección de candidatos */
+.seleccion-candidatos {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.seleccion-candidatos h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
 .candidates-scroll-container {
   display: flex;
   gap: 1rem;
@@ -171,24 +223,32 @@ onMounted(fetchCandidatos)
   padding-bottom: 1rem;
   scroll-snap-type: x mandatory;
 }
+
 .candidate-card-horizontal {
   flex: 0 0 auto;
-  width: 70vw;
-  max-width: 300px;
-  height: 450px;
+  width: 250px;
+  height: 380px;
   position: relative;
   background: #fff;
   border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   scroll-snap-align: center;
-  transition: transform 0.3s;
+  transition: all 0.3s;
   cursor: pointer;
   border: 3px solid transparent;
 }
+
+.candidate-card-horizontal:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
 .candidate-card-horizontal.selected {
   border: 3px solid #1d4ed8;
+  box-shadow: 0 8px 24px rgba(29,78,216,0.3);
 }
+
 .candidate-img {
   position: absolute;
   inset: 0;
@@ -196,113 +256,302 @@ onMounted(fetchCandidatos)
   height: 100%;
   object-fit: cover;
 }
+
 .candidate-info-gradient {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1.2rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
   color: #fff;
 }
+
 .candidate-info-gradient h3 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
+
 .candidate-partido {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #cce3ff;
-  margin-bottom: 1rem;
 }
+
 .selected-label {
-  background: #1d4ed8;
+  background: #10b981;
   color: #fff;
-  padding: 0.2rem 0.7rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   position: absolute;
   top: 10px;
   right: 10px;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.5);
 }
-.candidate-btn {
+
+/* Filtro de categorías */
+.filtro-categorias {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.filtro-categorias h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.categorias-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  background: #f3f4f6;
+  border: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #374151;
+}
+
+.chip:hover {
+  background: #e5e7eb;
+}
+
+.chip.active {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
+}
+
+/* Comparador por categorías */
+.comparador-categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.categoria-accordion {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.categoria-header {
+  width: 100%;
   background: #1d4ed8;
   color: #fff;
   border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
   transition: background 0.2s;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 1rem;
+  text-align: left;
 }
-.candidate-btn:disabled {
-  background: #a5b4fc;
-  cursor: not-allowed;
+
+.categoria-header:hover {
+  background: #1e40af;
 }
-.comparador-datos {
-  display: flex;
-  gap: 2rem;
-}
-.candidato-col {
-  flex: 1;
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px #0001;
-  padding: 1rem;
-}
-.perfil-foto {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #e0e0e0;
-  margin-bottom: 1rem;
-}
-.candidato-col h2 {
-  font-size: 1.4rem;
+
+.categoria-titulo {
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
 }
-.candidato-col section {
-  margin-top: 1.5rem;
+
+.categoria-content {
+  padding: 1.5rem;
+  background: #fff;
 }
-.candidato-col h3 {
-  color: #1d4ed8;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.2rem;
-  border-bottom: 1px solid #e5e7eb;
+
+.candidatos-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: #1d4ed8 #e5e7eb;
 }
-.candidato-col ul {
+
+.candidatos-scroll-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.candidatos-scroll-wrapper::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.candidatos-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #1d4ed8;
+  border-radius: 4px;
+}
+
+.candidatos-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #1e40af;
+}
+
+.candidatos-row-swipe {
+  display: flex;
+  gap: 1.5rem;
+  min-width: min-content;
+  padding-bottom: 0.5rem;
+}
+
+.candidato-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  transition: all 0.3s;
+  flex: 0 0 auto;
+  width: 320px;
+  scroll-snap-align: start;
+}
+
+.candidato-card:hover {
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(29,78,216,0.15);
+}
+
+.candidato-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.foto-candidato {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1d4ed8;
+  flex-shrink: 0;
+}
+
+.candidato-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.candidato-info h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+
+.partido-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.propuestas-content ul {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
+  margin: 0;
 }
-.candidato-col ul li {
-  padding: 0.5rem 0;
-  padding-left: 1.2rem;
+
+.propuestas-content ul li {
+  padding: 0.5rem 0 0.5rem 1.2rem;
   position: relative;
   line-height: 1.5;
   color: #374151;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
 }
-.candidato-col ul li::before {
+
+.propuestas-content ul li:last-child {
+  border-bottom: none;
+}
+
+.propuestas-content ul li::before {
   content: "▸";
   position: absolute;
   left: 0;
   color: #1d4ed8;
   font-weight: bold;
 }
-.candidato-col a {
-  color: #1d4ed8;
-  text-decoration: none;
-  word-break: break-all;
+
+.accordion-chevron {
+  font-size: 1rem;
+  color: #fff;
+  transition: transform 0.3s;
 }
-.candidato-col a:hover {
-  text-decoration: underline;
+
+.accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.sin-propuestas {
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.mensaje-vacio {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.mensaje-vacio p {
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .candidate-card-horizontal {
+    width: 200px;
+    height: 300px;
+  }
+  
+  .categorias-chips {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .categoria-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .categoria-titulo {
+    font-size: 1rem;
+  }
+  
+  .candidato-card {
+    width: 280px;
+  }
+  
+  .categoria-content {
+    padding: 1rem;
+  }
 }
 </style>
