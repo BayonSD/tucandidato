@@ -10,12 +10,21 @@
           </svg>
           <span class="navbar-title">Tu <span class="navbar-title-blue">Candidato</span></span>
         </NuxtLink>
-        <div class="navbar-menu">
-         <NuxtLink to="/" :class="{ active: isActive('/') }">Inicio</NuxtLink>
-         <NuxtLink to="/filtroCandidatos" :class="{ active: isActive('/filtroCandidatos') }">Candidatos</NuxtLink>
-         <NuxtLink to="/comparar" :class="{ active: isActive('/filtrarCandidato') }">Comparar Candidato</NuxtLink>
-         <NuxtLink to="/cadem" :class="{ active: isActive('/cadem') }">Encuestas</NuxtLink>
-         <NuxtLink to="/quienesSomos" :class="{ active: isActive('/quienesSomos') }">Quiénes Somos</NuxtLink>
+        
+        <!-- Botón hamburguesa -->
+        <button class="menu-toggle" @click="menuAbierto = !menuAbierto" aria-label="Menú">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="navbar-menu" :class="{ 'menu-abierto': menuAbierto }">
+         <NuxtLink to="/" :class="{ active: isActive('/') }" @click="menuAbierto = false">Inicio</NuxtLink>
+         <NuxtLink to="/filtroCandidatos" :class="{ active: isActive('/filtroCandidatos') }" @click="menuAbierto = false">Candidatos</NuxtLink>
+         <NuxtLink to="/comparar" :class="{ active: isActive('/filtrarCandidato') }" @click="menuAbierto = false">Comparar Candidato</NuxtLink>
+         <NuxtLink to="/cadem" :class="{ active: isActive('/cadem') }" @click="menuAbierto = false">Encuestas</NuxtLink>
+         <NuxtLink to="/quienesSomos" :class="{ active: isActive('/quienesSomos') }" @click="menuAbierto = false">Quiénes Somos</NuxtLink>
+         <NuxtLink to="/contactanos" :class="{ active: isActive('/contactanos') }" @click="menuAbierto = false">Contáctanos</NuxtLink>
         </div>
       </div>
     </nav>
@@ -33,9 +42,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRoute } from '#app'
 
 const route = useRoute()
+const menuAbierto = ref(false)
 
 const isActive = (path) => {
   return route.path === path
@@ -81,6 +92,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .navbar-logo {
@@ -124,6 +136,20 @@ body {
   border-bottom-color: #1D4ED8;
 }
 
+/* Botón hamburguesa - oculto en desktop */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menu-toggle:hover {
+  color: #1D4ED8;
+}
+
 /* Footer */
 .footer {
   text-align: center;
@@ -147,17 +173,62 @@ body {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 1rem 1.5rem;
+  }
+  
   .navbar-title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
+  }
+  
+  .menu-toggle {
+    display: block;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  
+  .navbar-logo {
+    flex-shrink: 0;
   }
   
   .navbar-menu {
-    gap: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .navbar-menu.menu-abierto {
+    max-height: 400px;
   }
   
   .navbar-menu a {
-    font-size: 0.9rem;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #f0f0f0;
+    border-left: none;
+  }
+  
+  .navbar-menu a.active {
+    border-bottom: 1px solid #f0f0f0;
+    border-left: 4px solid #1D4ED8;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+  }
+  
+  .navbar-title {
+    font-size: 1.2rem;
   }
 }
 </style>

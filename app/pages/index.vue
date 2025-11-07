@@ -45,49 +45,39 @@
           </div>
         </section>
 
-        <!-- Encuestas -->
-        <section id="encuestas" class="content-card section-encuestas">
-          <h2>Encuestas</h2>
-          <div class="encuestas-list">
-            <div class="encuesta-bar">
-              <div class="encuesta-label">
-                <span>Candidato 1 (PE)</span>
-                <span class="encuesta-percent blue">28%</span>
-              </div>
-              <div class="encuesta-bar-bg">
-                <div class="encuesta-bar-fill blue" style="width: 28%"></div>
-              </div>
+                <section class="content-card section-navigation">
+          <div class="nav-grid">
+            <!-- Busca los candidatos -->
+            <div class="nav-card">
+              <h3>🔍 Busca los Candidatos</h3>
+              <p>Explora todos los candidatos presidenciales y conoce sus perfiles, propuestas y trayectorias políticas.</p>
+              <NuxtLink to="/filtroCandidatos" class="nav-btn">Ver Candidatos</NuxtLink>
             </div>
-            <div class="encuesta-bar">
-              <div class="encuesta-label">
-                <span>Candidato 2 (PA)</span>
-                <span class="encuesta-percent red">22%</span>
-              </div>
-              <div class="encuesta-bar-bg">
-                <div class="encuesta-bar-fill red" style="width: 22%"></div>
-              </div>
+
+            <!-- Compara candidatos -->
+            <div class="nav-card">
+              <h3>⚖️ Compara Candidatos</h3>
+              <p>Compara las propuestas y perfiles de los candidatos presidenciales para tomar una decisión informada.</p>
+              <NuxtLink to="/comparar" class="nav-btn">Comparar Ahora</NuxtLink>
             </div>
-            <div class="encuesta-bar">
-              <div class="encuesta-label">
-                <span>Candidato 3 (IND)</span>
-                <span class="encuesta-percent gray">15%</span>
-              </div>
-              <div class="encuesta-bar-bg">
-                <div class="encuesta-bar-fill gray" style="width: 15%"></div>
-              </div>
+
+            <!-- Encuestas -->
+            <div class="nav-card">
+              <h3>📊 Encuestas</h3>
+              <p>Revisa las últimas encuestas de opinión y conoce las preferencias electorales de los chilenos.</p>
+              <NuxtLink to="/cadem" class="nav-btn">Ver Encuestas</NuxtLink>
             </div>
-            <div class="encuesta-bar">
-              <div class="encuesta-label">
-                <span>No Sabe / No Responde</span>
-                <span class="encuesta-percent lightgray">35%</span>
-              </div>
-              <div class="encuesta-bar-bg">
-                <div class="encuesta-bar-fill lightgray" style="width: 35%"></div>
-              </div>
+
+            <!-- Quiénes somos -->
+            <div class="nav-card">
+              <h3>👥 Quiénes Somos</h3>
+              <p>Conoce más sobre nuestro proyecto y nuestro compromiso con la transparencia electoral.</p>
+              <NuxtLink to="/quienesSomos" class="nav-btn">Conocer Más</NuxtLink>
             </div>
           </div>
-          <p class="encuesta-source">Fuente: Encuesta Plaza Pública CADEM (Semana 43).</p>
         </section>
+
+
 
         <!-- Preguntas frecuentes (FAQ) -->
         <section id="faq" class="content-card section-faq">
@@ -485,9 +475,76 @@ body {
   display: inline-block;
 }
 
+.faq-link {
+  color: #1d4ed8;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+/* Sección de navegación */
+.section-navigation {
+  padding: 2rem;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.nav-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid rgba(29, 78, 216, 0.1);
+}
+
+.nav-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(29, 78, 216, 0.15);
+}
+
+.nav-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.nav-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.nav-btn {
+  background: #1d4ed8;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.nav-btn:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
 @media (max-width: 900px) {
   .main-container {
     padding: 1rem;
+  }
+  .nav-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   .candidates-scroll-container {
     gap: 0.7rem;
