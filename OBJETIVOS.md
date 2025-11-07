@@ -35,6 +35,7 @@ Tendremos una página dedicada a los candidatos, que funcionará como buscador y
 - Filtros por partido político, por lista/nomina y por tipo de candidatura.
 - Permite buscar y comparar candidatos fácilmente.
 
+
 ## Página de los candidatos presidenciales
 
 En la página dedicada a cada candidato presidencial se mostrará:
@@ -48,3 +49,29 @@ En un bloque adicional de la misma página:
 - Currículum vitae (CV) del candidato.
 - Propuesta de gobierno.
 - Sección de últimas noticias del candidato (obtenidas mediante una API externa).
+
+---
+
+## Patrones de diseño
+
+- El código debe ser **escalable**, **mantenible** y **modular**.
+- Se sigue una arquitectura clara:
+      - El directorio `server` contiene la lógica de base de datos, modelos y API.
+      - El directorio `app/pages` contiene las vistas del sistema.
+- Cada vista debe tener bien definida la estructura de sus secciones, por ejemplo:
+      ```vue
+      <template>
+         <datos-presidente />
+         <cv-presidente />
+      </template>
+
+      <script>
+      // Lógica de la vista
+      </script>
+
+      <style>
+      /* Estilos de la vista */
+      </style>
+      ```
+- Se recomienda el uso de componentes reutilizables y la separación clara entre lógica, presentación y estilos.
+- Documentar cada sección y componente para facilitar el mantenimiento y la colaboración.

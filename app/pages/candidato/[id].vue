@@ -4,65 +4,165 @@
       <h2>No se encontró el candidato</h2>
       <p>Verifica el enlace o vuelve a la página de candidatos.</p>
     </div>
-    <!-- Sección principal: datos desde MongoDB -->
-    <header class="content-card perfil-header">
-      <img
-        :src="candidato.fotoUrl || defaultFoto"
-        alt="Foto del Candidato"
-        class="perfil-foto"
-      >
-      <div class="perfil-info">
-        <h1>{{ candidato.nombre_completo }}</h1>
-        <p class="perfil-partido">{{ candidato.lista_nomina }}</p>
-        <p class="perfil-lema" v-if="candidato.lema">"{{ candidato.lema }}"</p>
-        <div class="perfil-redes">
-          <a v-if="candidato.twitter" :href="candidato.twitter" target="_blank" title="Twitter">
-            <svg><!-- icono Twitter --></svg>
-          </a>
-          <a v-if="candidato.facebook" :href="candidato.facebook" target="_blank" title="Facebook">
-            <svg><!-- icono Facebook --></svg>
-          </a>
-          <a v-if="candidato.instagram" :href="candidato.instagram" target="_blank" title="Instagram">
-            <svg><!-- icono Instagram --></svg>
-          </a>
-          <a v-if="candidato.web" :href="candidato.web" target="_blank" title="Sitio Web">
-            <svg><!-- icono Web --></svg>
-          </a>
+    
+    <div v-else-if="candidato && candidato._id">
+      <!-- Sección principal: datos desde MongoDB -->
+      <header class="content-card perfil-header">
+        <img :src="candidato.fotoUrl || defaultFoto" alt="Foto del Candidato" class="perfil-foto">
+        <div class="perfil-info">
+          <h1>{{ candidato.Nombre }} {{ candidato['Primer  Apellido'] }} {{ candidato['Segundo  Apellido'] }}</h1>
+          <p class="perfil-partido"><strong>Lista/Nómina:</strong> {{ candidato['Lista/Nómina'] }}</p>
+          <p class="perfil-partido"><strong>Partido:</strong> {{ candidato['Nombre  Partido'] || 'Sin partido' }}</p>
+          <p class="perfil-info-extra"><strong>Sexo:</strong> {{ candidato.Sexo === 'H' ? 'Hombre' : 'Mujer' }}</p>
+          <p class="perfil-info-extra"><strong>Rango:</strong> {{ candidato.Rango }}</p>
+          <p class="perfil-info-extra"><strong>Región:</strong> {{ candidato['Región'] }}</p>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <!-- Secciones manuales (solo presidentes) -->
-    <main>
-      <section class="content-card perfil-biografia">
-        <h2>Biografía</h2>
-        <p>{{ candidato.biografia }}</p>
+      <!-- Secciones adicionales -->
+      <main>
+        <section class="content-card perfil-biografia">
+          <h2>Información del Candidato</h2>
+          <p>Tipo de elección: {{ candidato['Tipo  Eleccion'] }}</p>
+          <p>Territorio Electoral: {{ candidato['Territorio  Electoral'] }}</p>
+        </section>
+
+        <section
+          v-if="candidato.propuestas && Object.keys(candidato.propuestas).length > 0"
+          class="content-card perfil-propuestas"
+        >
+          <h2>📋 Propuestas de Gobierno por Categoría</h2>
+          <div class="propuestas-accordion">
+            <div
+              v-for="(propuestas, categoria) in candidato.propuestas"
+              :key="categoria"
+              class="accordion-item"
+            >
+              <button
+                class="accordion-header"
+                @click="toggleCategoria(categoria)"
+                :aria-expanded="categoriasAbiertas[categoria]"
+              >
+                <span class="accordion-title">{{ getEmojiCategoria(categoria) }} {{ categoria }}</span>
+                <span class="accordion-chevron" :class="{ open: categoriasAbiertas[categoria] }">▼</span>
+              </button>
+              <div v-show="categoriasAbiertas[categoria]" class="accordion-content">
+                <ul v-if="Array.isArray(propuestas) && propuestas.length > 0">
+                  <li v-for="(propuesta, index) in propuestas" :key="index">
+                    {{ propuesta }}
+                  </li>
+                </ul>
+                <p v-else class="sin-propuestas">No hay propuestas registradas para esta categoría.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          v-if="candidato.propuestaPDF"
+          class="content-card perfil-propuestas-pdf"
+        >
+          <h2>📋 Documento de Propuesta</h2>
+          <div class="pdf-controls">
+            <a
+              :href="candidato.propuestaPDF"
+              target="_blank"
+              class="btn-abrir"
+            >
+              🔗 Abrir en nueva pestaña
+            </a>
+            <a
+              :href="candidato.propuestaPDF"
+              download
+              class="btn-descargar"
+            >
+              📥 Descargar PDF
+            </a>
+          </div>
+          <div class="pdf-viewer">
+            <iframe
+              :src="candidato.propuestaPDF"
+              width="100%"
+              height="800px"
+              frameborder="0"
+            />
+          </div>
+        </section>
+
+      <section v-if="candidato.cvContenido" class="content-card perfil-cv">
+        <h2>📋 Curriculum Vitae</h2>
+        
+        <div v-if="candidato.cvContenido.formacion && candidato.cvContenido.formacion.length > 0" class="cv-section">
+          <h3>🎓 Formación</h3>
+          <ul v-if="Array.isArray(candidato.cvContenido.formacion)">
+            <li v-for="(item, index) in candidato.cvContenido.formacion" :key="index">
+              {{ item }}
+            </li>
+          </ul>
+          <p v-else class="cv-single-item">
+            {{ candidato.cvContenido.formacion }}
+          </p>
+        </div>
+
+        <div v-if="candidato.cvContenido.experiencia && candidato.cvContenido.experiencia.length > 0" class="cv-section">
+          <h3>💼 Experiencia</h3>
+          <ul>
+            <li v-for="(exp, index) in candidato.cvContenido.experiencia" :key="index">
+              {{ exp }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="candidato.cvContenido.logros && candidato.cvContenido.logros.length > 0" class="cv-section">
+          <h3>🏆 Logros</h3>
+          <ul>
+            <li v-for="(logro, index) in candidato.cvContenido.logros" :key="index">
+              {{ logro }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="candidato.fuentes && candidato.fuentes.length > 0" class="cv-section">
+          <h3>📚 Fuentes</h3>
+          <ul>
+            <li v-for="(fuente, index) in candidato.fuentes" :key="index">
+              <a v-if="fuente.startsWith('http')" :href="fuente" target="_blank" rel="noopener">{{ fuente }}</a>
+              <span v-else>{{ fuente }}</span>
+            </li>
+          </ul>
+        </div>
       </section>
 
-      <section class="content-card perfil-cv">
-        <h2>Trayectoria y Experiencia</h2>
-        <!-- Aquí puedes mostrar candidato.cv o un timeline manual -->
-      </section>
-
-      <section class="content-card perfil-propuestas">
-        <h2>Propuestas de Gobierno</h2>
-        <ul>
-          <li v-for="(propuesta, i) in candidato.propuestas" :key="i">{{ propuesta }}</li>
-        </ul>
-      </section>
-
-      <section class="content-card perfil-noticias">
-        <h2>Noticias Relevantes</h2>
-        <ul>
-          <li v-for="(noticia, i) in candidato.noticias" :key="i">{{ noticia }}</li>
-        </ul>
-      </section>
-    </main>
+        <section class="content-card perfil-noticias">
+          <h2>📰 Últimas Noticias</h2>
+          <div v-if="loadingNoticias">Cargando noticias...</div>
+          <ul v-else>
+            <li v-for="noticia in noticias" :key="noticia.url" class="noticia-item">
+              <a :href="noticia.url" target="_blank" rel="noopener">
+                <strong>{{ noticia.titulo }}</strong>
+              </a>
+              <div class="noticia-meta">
+                <span>{{ noticia.medio }}</span> ·
+                <span>{{ noticia.fecha }}</span>
+              </div>
+              <p>{{ noticia.resumen }}</p>
+            </li>
+          </ul>
+          <div v-if="!loadingNoticias && noticias.length === 0">
+            <em>No se encontraron noticias recientes.</em>
+          </div>
+        </section>
+      </main>
+    </div>
+    
+    <div v-else class="perfil-loading">
+      <p>Cargando información del candidato...</p>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from '#imports'
 
 const route = useRoute()
@@ -70,17 +170,88 @@ const candidato = ref({})
 const error = ref(false)
 const defaultFoto = 'https://placehold.co/150x150/E0E0E0/7F7F7F?text=Candidato'
 
-onMounted(async () => {
+// Noticias
+const noticias = ref([])
+const loadingNoticias = ref(false)
+
+// Acordeón de categorías
+const categoriasAbiertas = ref({})
+
+const emojisCategoria = {
+  "Agricultura": "🌾",
+  "Cultura": "🎭",
+  "Deporte": "🏅",
+  "Descentralización": "🗺️",
+  "Economía / Crecimiento": "📈",
+  "Educación": "📘",
+  "Empleo y Trabajo": "🧑‍💼",
+  "Energía": "⚡",
+  "Igualdad y Género": "⚧️",
+  "Infraestructura": "🧱",
+  "Innovación Social": "🤝",
+  "Innovación y Ciencia": "🔬",
+  "Integridad / Anticorrupción": "🚫",
+  "Justicia": "⚖️",
+  "Medio Ambiente": "🌿",
+  "Migración": "🧭",
+  "Participación Ciudadana": "🗳️",
+  "Pensiones": "💰",
+  "Pueblos Originarios": "🪶",
+  "Recursos Hídricos": "💧",
+  "Reducción de Pobreza": "📉",
+  "Reforma Tributaria": "🧾",
+  "Relaciones Exteriores": "🌐",
+  "Salud": "🩺",
+  "Seguridad Pública": "🛡️",
+  "Sistema Penitenciario": "🏛️",
+  "Transformación Digital": "💻",
+  "Transporte": "🚉",
+  "Turismo": "🧳",
+  "Vivienda": "🏠"
+}
+
+const toggleCategoria = (categoria) => {
+  categoriasAbiertas.value[categoria] = !categoriasAbiertas.value[categoria]
+}
+
+const getEmojiCategoria = (categoria) => {
+  return emojisCategoria[categoria] || "📌"
+}
+
+const fetchNoticias = async () => {
+  loadingNoticias.value = true
+  noticias.value = []
+  try {
+    const nombreCompleto = `${candidato.value.Nombre} ${candidato.value['Primer  Apellido']} ${candidato.value['Segundo  Apellido']}`.trim()
+    const tipo = candidato.value['Tipo  Eleccion'] || candidato.value.tipo_eleccion || 'presidente'
+    if (!nombreCompleto) throw new Error('Nombre vacío')
+    const res = await fetch(`/api/noticias?nombre=${encodeURIComponent(nombreCompleto)}&tipo=${encodeURIComponent(tipo)}`)
+    if (!res.ok) throw new Error('Error noticias')
+    const data = await res.json()
+    noticias.value = data.noticias
+  } catch (e) {
+    noticias.value = []
+  } finally {
+    loadingNoticias.value = false
+  }
+}
+
+const fetchCandidato = async () => {
+  error.value = false
   try {
     const res = await fetch(`/api/candidatos/${route.params.id}`)
     if (!res.ok) throw new Error('No encontrado')
     const data = await res.json()
     if (!data || Object.keys(data).length === 0) throw new Error('No encontrado')
     candidato.value = data
+    await fetchNoticias() // <-- Llama a noticias después de cargar candidato
   } catch (e) {
     error.value = true
   }
-})
+}
+
+onMounted(fetchCandidato)
+watch(() => route.params.id, fetchCandidato)
 </script>
 
 <style scoped>
@@ -93,6 +264,16 @@ onMounted(async () => {
   border-radius: 1rem;
   margin-bottom: 2rem;
   text-align: center;
+}
+
+.perfil-loading {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 body, html, * {
@@ -137,10 +318,16 @@ body, html, * {
 }
 
 .perfil-partido {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #1d4ed8;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.perfil-info-extra {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.3rem;
 }
 
 .perfil-lema {
@@ -172,6 +359,200 @@ body, html, * {
   margin-bottom: 1rem;
 }
 
+
+.pdf-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-abrir,
+.btn-descargar {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-abrir {
+  background: #1d4ed8;
+  color: white;
+}
+
+.btn-abrir:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+.btn-descargar {
+  background: #10b981;
+  color: white;
+}
+
+.btn-descargar:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.pdf-viewer {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9fafb;
+  margin-bottom: 1rem;
+}
+
+.pdf-viewer iframe {
+  display: block;
+}
+
+.perfil-cv {
+  margin-top: 2rem;
+}
+
+.cv-section {
+  margin-bottom: 2rem;
+}
+
+.cv-section h3 {
+  color: #1d4ed8;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.cv-section p {
+  line-height: 1.8;
+  color: #4b5563;
+}
+
+.cv-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.cv-section ul li {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.cv-section ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.cv-section a {
+  color: #1d4ed8;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.cv-section a:hover {
+  text-decoration: underline;
+}
+
+.cv-single-item {
+  background: #f3f4f6;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #374151;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Estilos del acordeón de propuestas */
+.propuestas-accordion {
+  margin-top: 1.5rem;
+}
+
+.accordion-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-header {
+  width: 100%;
+  background: #f9fafb;
+  border: none;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.accordion-header:hover {
+  background: #f3f4f6;
+}
+
+.accordion-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.accordion-chevron {
+  font-size: 0.9rem;
+  color: #6b7280;
+  transition: transform 0.3s;
+}
+
+.accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 1.5rem;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.accordion-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.accordion-content ul li {
+  padding: 0.75rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.6;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.accordion-content ul li:last-child {
+  border-bottom: none;
+}
+
+.accordion-content ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.sin-propuestas {
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
 @media (max-width: 700px) {
   .perfil-header {
     flex-direction: column;
@@ -179,7 +560,19 @@ body, html, * {
     gap: 1rem;
     padding: 1rem;
   }
-  .perfil-biografia, .perfil-cv, .perfil-propuestas, .perfil-noticias {
+  .perfil-biografia, .perfil-cv, .perfil-propuestas, .perfil-propuestas-pdf, .perfil-noticias {
+    padding: 1rem;
+  }
+  
+  .accordion-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .accordion-title {
+    font-size: 1rem;
+  }
+  
+  .accordion-content {
     padding: 1rem;
   }
 }

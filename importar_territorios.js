@@ -16,6 +16,7 @@ const TERRITORIOS_SHEET = 'Sheet1';
 const TERRITORIOS_COL_COMUNA = 'Comuna';
 const TERRITORIOS_COL_DISTRITO = 'Distrito';
 const TERRITORIOS_COL_SENATORIAL = 'Circunscripción Senatorial';
+const TERRITORIOS_COL_PROVINCIAL = 'Circunscripción Provincial';
 
 // --- Función Principal ---
 async function importarTerritorios() {
@@ -61,11 +62,13 @@ async function importarTerritorios() {
     // Agrupar comunas por distrito y circunscripción senatorial
     const distritosComunasMap = new Map();
     const senatorialesComunasMap = new Map();
+    const senatorialesProvincialMap = new Map();
 
     for (const row of territoriosData) {
       const comuna = row[TERRITORIOS_COL_COMUNA];
       const distrito = row[TERRITORIOS_COL_DISTRITO];
       const senatorial = row[TERRITORIOS_COL_SENATORIAL];
+      const provincial = row[TERRITORIOS_COL_PROVINCIAL];
 
       if (distrito) {
         if (!distritosComunasMap.has(distrito)) distritosComunasMap.set(distrito, []);
@@ -74,6 +77,10 @@ async function importarTerritorios() {
       if (senatorial) {
         if (!senatorialesComunasMap.has(senatorial)) senatorialesComunasMap.set(senatorial, []);
         senatorialesComunasMap.get(senatorial).push(comuna);
+
+        // Agrupar provincias por circunscripción senatorial
+        if (!senatorialesProvincialMap.has(senatorial)) senatorialesProvincialMap.set(senatorial, new Set());
+        if (provincial) senatorialesProvincialMap.get(senatorial).add(provincial);
       }
     }
 
@@ -84,7 +91,7 @@ async function importarTerritorios() {
     for (const [distrito, comunas] of distritosComunasMap.entries()) {
       const num = distrito.match(/\d+$/);
       const regionNombre = num ? distritoRegionMap.get(num[0]) || `Región Desconocida (Distrito ${num[0]})` : `Región Desconocida (${distrito})`;
-      const comunasLimpias = [...new Set(comunas.map(c => c.trim()))];
+      const comunasLimpias = [...new Set(comunas.map(c => c && c.trim()))];
 
       territoriosDocs.push({
         nombre_territorio: `DISTRITO ${num ? num[0] : distrito}`,
@@ -98,13 +105,17 @@ async function importarTerritorios() {
     for (const [numeroSenatorial, comunas] of senatorialesComunasMap.entries()) {
       const nombreCircunscripcion = `CIRCUNSCRIPCIÓN SENATORIAL ${numeroSenatorial}`;
       const regionNombre = senatorialRegionMap.get(numeroSenatorial) || `Región Desconocida (${nombreCircunscripcion})`;
-      const comunasLimpias = [...new Set(comunas.map(c => c.trim()))];
+      const comunasLimpias = [...new Set(comunas.map(c => c && c.trim()))];
+      const provincias = senatorialesProvincialMap.has(numeroSenatorial)
+        ? Array.from(senatorialesProvincialMap.get(numeroSenatorial))
+        : [];
 
       territoriosDocs.push({
         nombre_territorio: nombreCircunscripcion,
         tipo: "Senador",
         region: regionNombre,
-        comunas: comunasLimpias
+        comunas: comunasLimpias,
+        provincias: provincias
       });
     }
 
